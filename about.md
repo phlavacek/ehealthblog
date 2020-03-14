@@ -11,7 +11,7 @@ Ve veřejném prostoru se nevede veřejná debata o stavu elektronizace zdravotn
 
 ## Kdo je autorem tohoto webu
 
-Autorem tohoto webu je [Petr Hlaváček](https://headman.mojeid.cz/). Nejsem a nikdy jsem nebyl v žádné politické funkci na Praze 7 ani jinde a nikdy jsem se ani o žádnou politickou funkci neucházel a ani to nemám v úmyslu. 
+Autorem tohoto webu je [Petr Hlaváček](https://headman.mojeid.cz/). 
 
 ![Petr Hlaváček](/images/headman_foto.jpg)
 
