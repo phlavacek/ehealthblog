@@ -7,7 +7,7 @@ permalink: /about/
 
 ## Proč vznikl tento web
 
-Ve veřejném prostoru se nevede veřejná debata o stavu elektronizace zdravotnictví. KOnkrétní těžkosti stávajících eHealth projektů nejsou adekvátně diskutovány mezi IT profesionály.
+Ve veřejném prostoru se nevede veřejná debata o stavu elektronizace zdravotnictví. Konkrétní těžkosti stávajících eHealth projektů nejsou adekvátně diskutovány mezi IT profesionály.
 
 ## Kdo je autorem tohoto webu
 
