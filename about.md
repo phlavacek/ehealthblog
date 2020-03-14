@@ -15,8 +15,6 @@ Autorem tohoto webu je [Petr Hlaváček](https://headman.mojeid.cz/). Nejsem a n
 
 ![Petr Hlaváček](/images/headman_foto.jpg)
 
-Nejsem žádným způsobem spjat s minulým vedením MČ Praha 7 ani s politickými stranami, které zde vládly. Jsem řadovým členem [Strany svobodných občanů](http://www.svobodni.cz/), ale tento web jsem vytvořil a provozuji jej jako soukromá fyzická osoba, zcela nezávisle na ní.
-
 ## Kdo tento web platí
 
 Já sám. I když nejpřesnější odpověď je *nikdo*. Tento web je provozován prostřednictvím bezplatných služeb [GitHub](https://github.com/). Jeho obsah vytvářím ve svém volném čase a nedostávám za něj žádný honorář.
