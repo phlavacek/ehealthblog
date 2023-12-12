@@ -1,0 +1,107 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "_umap_options": {
+          "outlink": "http://seznam.cz",
+          "showLabel": true
+        },
+        "description": "popis 444",
+        "toto je vrstva": "objekt 444"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              16.49015,
+              50.03419
+            ],
+            [
+              16.49014,
+              50.03401
+            ],
+            [
+              16.49147,
+              50.03399
+            ],
+            [
+              16.49147,
+              50.03415
+            ],
+            [
+              16.49015,
+              50.03419
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "description": "popis 333",
+        "toto je vrstva": "toto je název 333"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              16.49009,
+              50.03387
+            ],
+            [
+              16.4903,
+              50.03325
+            ],
+            [
+              16.49174,
+              50.03334
+            ],
+            [
+              16.4917,
+              50.03385
+            ],
+            [
+              16.49009,
+              50.03387
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "objekt 5",
+        "description": "popis 5"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              16.492077,
+              50.034065
+            ],
+            [
+              16.492176,
+              50.0335
+            ],
+            [
+              16.492788,
+              50.033879
+            ],
+            [
+              16.492077,
+              50.034065
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
