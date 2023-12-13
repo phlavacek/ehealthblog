@@ -6,7 +6,8 @@
       "properties": {
         "_umap_options": {
           "outlink": "http://seznam.cz",
-          "showLabel": true
+          "showLabel": true,
+"color": "LimeGreen"
         },
         "description": "popis 444",
         "toto je vrstva": "objekt 444"
