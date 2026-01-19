@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Testovací otázky</title>
+  <style>
+    :root {
+      --bg: #f4f7ff;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #2563eb;
+      --ok: #16a34a;
+      --bad: #dc2626;
+      --border: rgba(15, 23, 42, 0.14);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 800px at 20% 0%, rgba(37,99,235,0.16), transparent 60%),
+                  radial-gradient(1200px 800px at 100% 30%, rgba(22,163,74,0.12), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 820px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    header {
+      display: grid;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      min-height: 66px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .value.ok { color: var(--ok); }
+    .value.bad { color: var(--bad); }
+
+    .question {
+      font-size: 18px;
+      line-height: 1.35;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 14px 14px;
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      min-height: 52px;
+      touch-action: manipulation;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button:active { transform: translateY(1px); }
+
+    button.primary {
+      background: linear-gradient(180deg, rgba(37,99,235,0.18), rgba(37,99,235,0.08));
+      border-color: rgba(37,99,235,0.40);
+    }
+
+    button.ok {
+      background: linear-gradient(180deg, rgba(22,163,74,0.18), rgba(22,163,74,0.08));
+      border-color: rgba(22,163,74,0.40);
+    }
+
+    button.bad {
+      background: linear-gradient(180deg, rgba(220,38,38,0.16), rgba(220,38,38,0.07));
+      border-color: rgba(220,38,38,0.40);
+    }
+
+    button.accent {
+      background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.06));
+      border-color: rgba(37,99,235,0.30);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .row button {
+      flex: 1 1 140px;
+      min-height: 44px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      margin: 10px 0 0 0;
+    }
+
+    details {
+      margin-top: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .answer {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      background: rgba(37, 99, 235, 0.05);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: none;
+    }
+
+    .answer.visible {
+      display: block;
+    }
+
+    @media (max-width: 520px) {
+      .stats { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: 1fr; }
+      .question { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Testovací otázky</h1>
+      <div class="sub">Náhodně vybírá otázky. Označ „Správně“ / „Špatně“. Správně zodpovězené otázky se vyřadí.</div>
+    </header>
+
+    <section class="card stats" aria-label="Statistiky">
+      <div class="stat">
+        <div class="label">Zbývá</div>
+        <div class="value" id="remaining">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Správně</div>
+        <div class="value ok" id="correct">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Špatně</div>
+        <div class="value bad" id="incorrect">0</div>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Otázka">
+      <p class="question" id="question">Načítám otázky…</p>
+
+      <div class="controls">
+        <button class="ok" id="btnCorrect" type="button">Správně</button>
+        <button class="bad" id="btnIncorrect" type="button">Špatně</button>
+      </div>
+
+      <div class="row">
+        <button class="accent" id="btnShowAnswer" type="button">Ukázat odpověď</button>
+      </div>
+
+      <div class="answer" id="answer" aria-live="polite"></div>
+
+      <div class="row">
+        <button class="primary" id="btnNext" type="button">Další otázka</button>
+        <button id="btnRestart" type="button">Restart</button>
+      </div>
+
+      <p class="muted" id="hint"></p>
+
+      <details>
+        <summary>Upravit seznam otázek (pokročilé)</summary>
+        <p class="muted">Aplikace načítá otázky z řádků začínajících <code>### </code> a odpověď bere jako text pod otázkou až do dalšího nadpisu. Můžeš sem vložit vlastní Markdown a dát Restart.</p>
+        <textarea id="sourceEditor" spellcheck="false"></textarea>
+      </details>
+    </section>
+  </div>
+
+  <script type="text/plain" id="source-md"># Vypracované otázky
+
+## 1 Mezinárodní právo jako druhý právní systém vedle vnitrostátního práva, nadnárodní právo Evropské unie (evropské právo) jako smíšený systém
+
+### Charakterizujte vnitrostátní právo
+
+Vnitrostátní právo je soubor právních norem, jimiž si každý stát upravuje poměry mezi fyzickými a právnickými osobami, které podléhají jeho svrchované moci Je hierarchizované (vertikální pohled) a zároveň se člení do právních odvětví (horizontální pohled) Lze v něm rozlišovat veřejné a soukromé právo
+
+### Vysvětlete princip subordinace
+
+Subordinace znamená podřízenost: ve vnitrostátním právu jsou jednotlivci podřízeni právu, které stát vytváří prostřednictvím svých orgánů a také jeho dodržování vynucuje (včetně sankcí) Podobně má subordinační charakter i právo EU, v rozsahu svěřených pravomocí
+
+### Charakterizujte koordinační charakter mezinárodního práva
+
+Mezinárodní právo má koordinační charakter, protože jeho normy vytvářejí státy a zároveň jsou jejich adresáty Neexistuje nadřízená autorita, která by byla státům hierarchicky nadřazená; státy mezinárodní právo vytvářejí, respektují a jeho respektování také (do určité míry) samy prosazují
+
+### Vysvětlete v čem se liší mezinárodní právo veřejné od unijního práva
+
+Mezinárodní právo veřejné upravuje vztahy uvnitř mezinárodního společenství (mezi státy a mezinárodními organizacemi) a má koordinační charakter
+
+Unijní právo je samostatný právní systém založený na zřizovacích smlouvách EU, má (podobně jako vnitrostátní právo) subordinační charakter a v určitých případech se bezprostředně vztahuje i na jednotlivce Obecně má také přednost před vnitrostátním právem členských států
+
+### Jaké znáte subjekty mezinárodního práva?
+
+- Státy
+- Mezinárodní organizace (mezivládní)
+- Ve zvláštních případech i jednotlivec (např. v ochraně lidských práv)
+
+### Vyjmenujte příklady pravidel mezinárodního práva
+
+Příklady:
+
+- Zákaz hrozby silou a použití síly (s výjimkami, např. sebeobrana)
+- Řešení mezistátních sporů mírovými prostředky
+- Pravidla pro uzavírání mezinárodních smluv
+- Úprava diplomatických a konzulárních styků
+- Ochrana základních lidských práv a svobod
+
+### Charakterizujte mezinárodní právo soukromé
+
+Mezinárodní právo soukromé upravuje soukromoprávní vztahy mezi jednotlivci z různých států (např. smlouvy, statusové otázky) Zejména určuje, kterého státu je právo rozhodné a který soud je příslušný
+
+Navzdory názvu nejde o mezinárodní právo v pravém smyslu, ale o odvětví práva vnitrostátního (v ČR zejména zákon č. 91/2012 Sb.) Pravidla se mohou objevovat i v právu EU a v některých mezinárodních smlouvách
+
+## 2 Státy, mezinárodní organizace jako subjekty mezinárodního práva, jednotlivci jako okrajové subjekty
+
+### Jaký je rozdíl mezi subjektem mezinárodního práva a mezinárodně právní subjektivitou?
+
+Subjekt mezinárodního práva je entita, která může být nositelem práv a povinností v mezinárodním právu
+
+Mezinárodněprávní subjektivita je způsobilost takové entity mít práva a povinnosti přímo z mezinárodního práva a vlastní vůlí vstupovat do mezinárodněprávních vztahů
+
+### Jaké znáte subjekty mezinárodního práva? Uveďte dva nejvýznamnější?
+
+Subjekty: státy, mezinárodní organizace (mezivládní), ve zvláštních případech jednotlivec
+
+Dva nejvýznamnější: stát a mezinárodní organizace
+
+### Jaké jsou pojmové znaky státu?
+
+Typicky tři:
+
+- Území
+- Obyvatelstvo
+- Státní (veřejná) moc
+
+Někdy se uvádí i čtvrtý znak: způsobilost vstupovat do mezinárodních vztahů
+
+### Co je to mezinárodní organizace?
+
+Mezinárodní organizace (mezivládní) je relativně trvalé sdružení států za určitým účelem, založené mezinárodní smlouvou, které vykonává úkoly vlastním jménem a vlastními orgány
+
+### Co je to mezinárodní konference?
+
+Mezinárodní konference je dočasné sdružení států (nebo jejich zástupců) k určitému účelu Na rozdíl od mezinárodní organizace nejde o trvalé institucionální uspořádání
+
+### Jaký je rozdíl mezi mezivládní a nevládní mezinárodní organizací?
+
+- Mezivládní: členy jsou státy; jen tyto organizace jsou subjekty mezinárodního práva
+- Nevládní: členy jsou nestátní subjekty či jednotlivci; typicky nejsou subjekty mezinárodního práva
+
+### Jak se liší mezinárodně právní subjektivita státu a mezinárodní organizace?
+
+- Stát: originární (prvotní) a neomezená mezinárodněprávní subjektivita
+- Mezinárodní organizace: odvozená a omezená (rozsahem zřizovací smlouvy)
+
+### V jakých případech může být subjektem mezinárodního práva jednotlivec?
+
+Typicky jen okrajově, zejména:
+
+- V oblasti mezinárodní ochrany lidských práv (např. stížnosti k ESLP)
+- V mezinárodním trestním soudnictví (postih za zločiny podle mezinárodního práva)
+
+## 3 Prameny mezinárodního práva - mezinárodní obyčeje a mezinárodní smlouvy
+
+### Jaké jsou dva nejdůležitější prameny mezinárodního práva a jaký je mezi nimi rozdíl?
+
+- Mezinárodní obyčej
+- Mezinárodní smlouva
+
+Obyčej vzniká dlouhodobou praxí a přesvědčením o právní závaznosti Smlouva je konsensuální ujednání mezi subjekty mezinárodního práva
+
+### Co musí být splněno, aby určité pravidlo bylo mezinárodním obyčejem?
+
+Musí být splněny oba prvky:
+
+- Usus longaevus (dlouhodobá, opakovaná praxe)
+- Opinio iuris (přesvědčení států, že jde o právně závazné pravidlo)
+
+### Charakterizujte mezinárodní smlouvu, jaké jsou její pojmové znaky?
+
+Mezinárodní smlouva je ujednání mezi subjekty mezinárodního práva, které má z vůle stran právní účinky a řídí se mezinárodním právem
+
+Pojmové znaky:
+
+- Je to dohoda (souhlasný projev vůle)
+- Stranami jsou subjekty mezinárodního práva
+- Má právní účinky (vznik/změna/zánik právních vztahů)
+- Její právní režim je určen mezinárodním právem
+
+### Uveďte a popište alespoň 4 různá dělení mezinárodních smluv
+
+Příklady dělení:
+
+- Podle smluvních stran: dvoustranné / mnohostranné
+- Podle možnosti přistoupení: otevřené / uzavřené / polootevřené
+- Podle obsahu: kontraktuální / právotvorné
+- Podle formy: písemné / ústní; plná / zjednodušená
+- Podle úrovně sjednání: prezidentské / vládní / rezortní
+
+### Jaký je rozdíl mezi kontraktuálními a právotvornými mezinárodními smlouvami?
+
+- Kontraktuální: upravují konkrétní vzájemná práva a povinnosti stran, typicky účinky inter partes
+- Právotvorné: vytvářejí (nebo kodifikují) pravidla chování v určité oblasti; často obecnější dopad
+
+### Co je to tzv. soft law? Je právně závazné? Uveďte příklady
+
+Soft law jsou právně nezávazné instrumenty (např. deklarace, doporučení mezinárodních organizací, akční plány apod.)
+
+Příklad: Závěrečný akt Konference o bezpečnosti a spolupráci v Evropě (KBSE) z roku 1975
+
+## 4 Vytváření a odstraňování mezinárodních smluv
+
+### Popište proces sjednávání a uzavírání mezinárodních smluv
+
+Typicky:
+
+- Sondáž (zjištění zájmu a stanoviska druhé strany)
+- Vyjednávání (tvorba textu)
+- Přijetí textu (fixace dohodnutého znění)
+- Autentifikace textu (potvrzení správnosti a oficiálnosti; často parafování/podpis)
+- Vnitrostátní schválení (dle typu smlouvy)
+- Vyjádření definitivního souhlasu být vázán (např. podpis/ratifikace/přístup)
+- Vstup v platnost dle ustanovení smlouvy
+
+### Co je to sondáž a expertní jednání?
+
+- Sondáž: zjišťování stanoviska/zájmu druhé strany o úpravě vztahů smlouvou.
+- Expertní jednání: jednání na expertní úrovni (u mnohostranných smluv často v pracovních skupinách v rámci mezinárodní organizace) k dohodnutí návrhu textu.
+
+### V jakých případech je možné aplikovat výhradu z mezinárodní smlouvy?
+
+Výhrady se typicky uplatňují u mnohostranných smluv, když státu nevyhovuje některé (nezásadní) ustanovení. Výhradu lze učinit při podpisu, ratifikaci nebo obdobném úkonu (nelze dodatečně) a zpravidla musí být písemná a notifikovaná.
+
+### Co znamená, když je mezinárodní smlouva "prozatímní"?
+
+Jde o prozatímní (předběžné) provádění smlouvy před jejím vstupem v platnost, typicky u dvoustranných smlouvách. Dohoda o prozatímním provádění bývá zpravidla v závěrečných ustanoveních smlouvy.
+
+### Jaký je rozdíl mezi mezinárodní smlouvou prezidentskou, vládní a rezortní?
+
+- Prezidentská: zpravidla nejzávažnější; vyžaduje souhlas Parlamentu; definitivní souhlas navenek dává prezident (ratifikace/přístup).
+- Vládní: sjednává a schvaluje vláda; nevyžaduje souhlas Parlamentu dle čl. 49 Ústavy.
+- Rezortní: v rámci jednoho rezortu; jedná člen vlády/ministerstvo, typicky bez potřeby parlamentního souhlasu.
+
+### Podle jakých pravidel se provádí výklad mezinárodních smluv?
+
+Účelem výkladu je zjistit skutečný smysl textu. Mezinárodní smlouvy interpretují:
+
+- smluvní strany
+- nebo jiné subjekty jimi pověřené (zejména orgány rozhodující spory)
+
+### Jakým způsobem se publikují mezinárodní smlouvy v ČR?
+
+Mezinárodní smlouvy se v ČR vyhlašují ve Sbírce mezinárodních smluv (od roku 2001). Dříve byly vyhlašovány společně se zákony ve Sbírce zákonů.
+
+## 6. Přenos mezinárodního práva do vnitrostátního práva a praxe
+
+### Co je to vstup smlouvy v platnost? Jaký je rozdíl mezi subjektivní a objektivní platností mezinárodní smlouvy? Jaké jsou varianty vstupu smlouvy v platnost? Na čem závisí?
+
+Vstup v platnost je okamžik, kdy je smlouva pro stát závazná dle mezinárodního práva (typicky po vyjádření definitivního souhlasu a splnění podmínek ve smlouvě).
+
+U mnohostranných smluv:
+
+- Objektivní platnost: platnost smlouvy jako takové (např. po dosažení minimálního počtu ratifikací).
+- Subjektivní platnost: platnost vůči konkrétnímu státu.
+
+Varianty vstupu v platnost:
+
+- Ihned podpisem/ratifikací
+- Po uplynutí doby po úkonu (legisvakance)
+- Po splnění dalších podmínek (např. dosažení počtu ratifikací, notifikace)
+- U některých smluv až po rozhodnutí (např. přijetí do mezinárodní organizace)
+
+### Jaké charakteristiky splňuje platná mezinárodní smlouva?
+
+Platná norma je taková, při jejíž tvorbě byly splněny předepsané náležitosti a stala se součástí právního systému, v němž vzniká.
+
+### Jaké charakteristiky splňuje účinná mezinárodní smlouva?
+
+Účinnost znamená časovou působnost normy (doba, po kterou má být používána). U mezinárodních smluv účinnost zpravidla splývá s platností.
+
+### Jaký je rozdíl mezi platnou a účinnou mezinárodní smlouvou?
+
+Platnost souvisí se vznikem normy a splněním formálních náležitostí; účinnost je časová působnost. U mezinárodních smluv obvykle účinnost spadá vjedno s platností.
+
+## 7. Evropská unie jako nadnárodní organizace ve srovnání s mezinárodní organizací
+
+### Co je to nadstátnost? Uveďte některé její projevy.
+
+Nadstátnost znamená, že organizace je vybavena pravomocemi vůči členským státům a stojí „nad nimi“ v rozsahu svěřených pravomocí. Členské státy výkon těchto pravomocí dobrovolně přenesly a musí se jim podřizovat i proti své vůli.
+
+Projevy:
+
+- EU má vlastní orgány a může závazně rozhodovat.
+- EU tvoří právo závazné pro orgány EU, členské státy a někdy i jednotlivce.
+- Přednost unijního práva a v některých případech přímý účinek.
+
+### Ztrácí členské státy vstupem do Evropské unie svoji svrchovanost?
+
+Neztrácí ji, ale přenášejí výkon části svrchovaných pravomocí na EU ve stanovených oblastech. EU není nadstát/federace, nedisponuje sama státní mocí.
+
+### Jak se liší Evropská unie před a po Lisabonské smlouvě?
+
+Lisabonská smlouva (2007/2009) způsobila zánik Evropského společenství a jeho „přetavení“ do EU; EU převzala právní subjektivitu a nadstátní charakter. Zanikla třípilířová struktura a EU je jednotná.
+
+### Kolik členských států má v současné době Evropská unie?
+
+V současnosti 27.
+
+### Jak se nazývá dvojice Smluv, která vytváří současnou Evropskou unii?
+
+- Smlouva o Evropské unii (SEU)
+- Smlouva o fungování Evropské unie (SFEU)
+
+### Popište roli Evropské komise, Rady EU, Evropského parlamentu a Soudního dvora EU.
+
+- Evropská komise: výkonný orgán; navrhuje a prosazuje předpisy, kontroluje dodržování práva EU, provádí politiky a rozpočet.
+- Rada EU: orgán členských států; rozhodovací role, účastní se legislativního procesu.
+- Evropský parlament: přímo volený orgán; legislativní, rozpočtová a dozorčí pravomoc.
+- Soudní dvůr EU: řeší spory, zajišťuje dodržování práva a jednotný výklad a aplikaci práva EU.
+
+### Jaký je rozdíl mezi Radou EU a Evropskou radou? Je Rada Evropy součástí Evropské unie?
+
+- Rada EU: ministerská úroveň, legislativní a rozhodovací činnost.
+- Evropská rada: „evropský summit“, nejvyšší politický orgán hlav států/vlád, určuje směřování a priority, neschvaluje právní předpisy.
+
+Rada Evropy není součástí EU; je samostatná mezinárodní organizace.
+
+### Co je označováno jako demokratický deficit?
+
+„Demokratický deficit“ označuje vnímaný nedostatek demokracie a odpovědnosti v rozhodovacích procesech EU (propast mezi pravomocemi orgánů a možností občanů rozhodování ovlivňovat). Typicky se poukazuje na roli Komise a Rady EU (nevolených exekutivních orgánů) a na odlišnou roli Evropského parlamentu oproti národním parlamentům.
+
+## 8. Prameny práva EU - zřizovací smlouvy, nařízení, směrnice - vytváření
+
+### Jaký je rozdíl mezi primárním a sekundárním právem EU?
+
+- Primární právo: zřizovací a revizní smlouvy (základní „ústava“ EU).
+- Sekundární právo: akty orgánů EU (nařízení, směrnice, rozhodnutí, doporučení, stanoviska) vydávané na základě primárního práva.
+
+### Co tvoří primární právo? Jak se primární právo mění?
+
+Primární právo tvoří zejména zřizovací smlouvy (SEU, SFEU, EURATOM) a další smlouvy je měnící/doplňující.
+
+Mění se zvláštní procedurou (typicky mezivládní konference, jednomyslné přijetí a ratifikace členskými státy); v některých případech existují zjednodušené postupy.
+
+### Jaké druhy sekundárních právních aktů znáte?
+
+- Nařízení
+- Směrnice
+- Rozhodnutí
+- Doporučení
+- Stanoviska
+
+### Popište rozdíl mezi nařízeními a směrnicemi. Koho zavazují?
+
+- Nařízení: obecně závazné a přímo použitelné; může přímo zavazovat státy i jednotlivce; smyslem je unifikace.
+- Směrnice: zavazuje členské státy co do výsledku; vyžaduje transpozici do vnitrostátního práva; smyslem je harmonizace.
+
+### K čemu slouží nařízení a k čemu směrnice?
+
+- Nařízení: přímá unijní úprava (unifikovaná pravidla).
+- Směrnice: sbližování obsahu vnitrostátních právních předpisů (harmonizace standardů).
+
+### Popište řádný legislativní postup přijímání legislativních aktů v EU.
+
+Typicky návrh předkládá Komise a spolurozhodují Evropský parlament a Rada EU. Postup může probíhat ve třech čteních; při neshodě se svolává dohodovací výbor.
+
+## 9. Uplatnění pramenů práva EU (přímý účinek, přednost)
+
+### Co znamená přímý účinek unijního práva?
+
+Přímý účinek znamená bezprostřední závaznost unijní normy vůči jednotlivcům: jednotlivec se může přímo dovolávat normy mimo rámec vnitrostátního práva a orgán ji musí bez dalšího aplikovat, pokud je ustanovení jasné, bezpodmínečné a nevyžaduje další prováděcí akt.
+
+### Jaké akty sekundárního práva typicky mají přímý účinek?
+
+Typicky nařízení (jsou přímo použitelná). Přímý účinek může mít i rozhodnutí, je-li adresováno jednotlivci (nebo je jednotlivec beneficientem).
+
+### V jakých případech může mít přímý účinek směrnice?
+
+Obecně směrnice přímý účinek nemá, ale při řádném a včasném neprovedení (po marném uplynutí transpoziční lhůty) může mít za určitých podmínek vertikální vzestupný účinek: jednotlivec se jí může dovolávat vůči státu.
+
+### Co znamená přednost unijního práva?
+
+Přednost znamená, že při rozporu mezi unijním a vnitrostátním právem se v konkrétním případě přednostně aplikuje unijní norma.
+
+### Je přednost unijního práva hierarchická nebo aplikační?
+
+Je aplikační: rozporná vnitrostátní norma se neruší, jen se v dané věci nepoužije.
+
+## 10. Nástroje prosazování práva EU a sjednocování jeho výkladu
+
+### Jak probíhá řízení proti členskému státu, který porušil povinnost stanovenou unijním právem?
+
+Mechanismus dle čl. 258–260 SFEU:
+
+- Předběžná (neoficiální) fáze vyjasňování
+- Formální fáze před Komisí: oficiální výstražný dopis -> případně odůvodněné stanovisko
+- Případná žaloba Komise k Soudnímu dvoru
+- Při nerespektování rozsudku možnost dalších kroků a pokut dle čl. 260 SFEU
+
+### Co je to oficiální výstražný dopis, kdo jej komu zasílá, co obsahuje a jaký je jeho účel?
+
+Komise zasílá členskému státu oficiální výstražný dopis, v němž identifikuje domnělé porušení a stanoví lhůtu pro odpověď (typicky 2 měsíce). Slouží k zahájení řízení dle čl. 258 SFEU.
+
+### Co je to odůvodněné stanovisko, kdy a kým je vydáváno, co obsahuje a jaký účel plní?
+
+Vydává je Komise, pokud se nespokojí s reakcí členského státu. Obsahuje:
+
+- odůvodnění (skutkové a právní)
+- opatření nutná k ukončení protiprávního stavu
+- lhůtu k nápravě (typicky 2 měsíce)
+
+Není právně závazné, ale má faktickou závaznost; při nerespektování může následovat žaloba k SDEU.
+
+### Jakým způsobem je zajišťován jednotný výklad norem unijního práva?
+
+Jednotný výklad zajišťuje Soudní dvůr EU zejména prejudiciálním rozhodováním v řízení o předběžné otázce.
+
+### Popište průběh řízení o předběžné otázce.
+
+Řízení o předběžné otázce (čl. 267 SFEU) je součást třífázového procesu:
+
+1. Vnitrostátní soud vede řízení, zjistí nejistotu výkladu/platnosti unijní normy, řízení přeruší a položí předběžnou otázku.
+2. Soudní dvůr rozhodne (výklad nebo posouzení platnosti).
+3. Vnitrostátní soud pokračuje a rozhodne ve věci na základě odpovědi Soudního dvora.
+
+## 11. Informační zdroje mezinárodního práva a evropského práva
+
+### Kde jsou v rámci českých oficiálních i soukromých zdrojů zveřejňovány mezinárodní smlouvy?
+
+V ČR zejména:
+
+- Sbírka mezinárodních smluv
+- Neoficiální databáze MZV
+
+Mezinárodně také např. United Nations Treaty Series.
+
+### Kde byste hledali znění sekundárního práva EU (např. konkrétního nařízení nebo směrnice)?
+
+- Úřední věstník EU
+- EUR-Lex
+
+### Kde byste hledali text rozhodnutí Soudního dvora EU?
+
+- CURIA
+
+## 12. Jazykový režim mezinárodního a evropského práva
+
+### Jaký bývá zpravidla jazykový režim dvoustranných mezinárodních smluv? jaká jsou jiná možná řešení a kdy k nim bývá přistupováno? Co jsou to tzv. alternáty?
+
+Dvoustranné smlouvy se vyhotovují ve dvou verzích (alternátech). Zpravidla jsou ve dvou jazycích (jazycích smluvních stran) a obě znění jsou rovnocenná a autentická.
+
+Možné je i použití třetího „rozhodného“ jazyka pro případ rozdílného výkladu, nebo výjimečně jediného jazyka (typicky u technických dohod, jazyk žádné strany).
+
+### Jaký bývá zpravidla jazykový režim mnohostranných mezinárodních smluv? Co je to autentické změní smlouvy a rozhodné znění smlouvy?
+
+U mnohostranných smluv se alternáty nepoužívají. Smlouva bývá sjednána a podepsána v několika (typicky „světových“) jazycích; tato znění mohou být autentická.
+
+Rozhodné znění je jazyk určený k řešení případných rozdílů ve výkladu (pokud je tak určen).
+
+### Čím se vyznačuje mnohojazyčnost Evropské unie? Které jazyky jsou považovány za úřední jazyky EU?
+
+EU je oficiálně mnohojazyčná a podporuje mnohojazyčnost jako princip. Má 24 úředních jazyků.
+
+### V jakém jazyce probíhají schůze a porady Soudního dvora Evropské unie? Jaké jsou možné jazyky řízení před Soudním dvorem Evropské unie. Co určuje jazykový režim řízení o předběžné otázce před Soudním dvorem Evropské unie? Kdy byste hledali rozhodnutí Soudního dvora Evropské unie v českém jazyce?
+
+- Jednacím jazykem SDEU (porady, deliberace) je francouzština.
+- Jazykem řízení může být kterýkoli úřední jazyk EU; volí jej žalobce (s některými pravidly dle účastníků).
+- V řízení o předběžné otázce je jazykem řízení jazyk dotazujícího se (předkládajícího) soudu.
+- Rozhodnutí v češtině lze hledat na webu CURIA; k dispozici jsou i české verze dokumentů a rozhodnutí (v závislosti na případu).
+</script>
+
+  <script>
+    "use strict";
+
+    const els = {
+      remaining: document.getElementById("remaining"),
+      correct: document.getElementById("correct"),
+      incorrect: document.getElementById("incorrect"),
+      question: document.getElementById("question"),
+      answer: document.getElementById("answer"),
+      hint: document.getElementById("hint"),
+      btnCorrect: document.getElementById("btnCorrect"),
+      btnIncorrect: document.getElementById("btnIncorrect"),
+      btnShowAnswer: document.getElementById("btnShowAnswer"),
+      btnNext: document.getElementById("btnNext"),
+      btnRestart: document.getElementById("btnRestart"),
+      sourceEditor: document.getElementById("sourceEditor"),
+      sourceMd: document.getElementById("source-md"),
+    };
+
+    function extractQAFromMarkdown(markdown) {
+      const lines = markdown.split(/\r?\n/);
+      const items = [];
+
+      let currentQuestion = null;
+      let currentAnswerLines = [];
+
+      function pushCurrent() {
+        if (!currentQuestion) return;
+        const answer = currentAnswerLines.join("\n").trim();
+        items.push({
+          question: currentQuestion,
+          answer,
+        });
+      }
+
+      for (const rawLine of lines) {
+        const line = rawLine.trimEnd();
+        if (line.startsWith("### ")) {
+          pushCurrent();
+          currentQuestion = line.slice(4).trim();
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (line.startsWith("## ") || line.startsWith("# ")) {
+          pushCurrent();
+          currentQuestion = null;
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (currentQuestion) currentAnswerLines.push(rawLine);
+      }
+
+      pushCurrent();
+
+      const unique = [];
+      const seen = new Set();
+      for (const item of items) {
+        const key = item.question.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(item);
+        }
+      }
+      return unique;
+    }
+
+    function randInt(maxExclusive) {
+      return Math.floor(Math.random() * maxExclusive);
+    }
+
+    const state = {
+      allItems: [],
+      remaining: [],
+      currentIndex: -1,
+      correct: 0,
+      incorrect: 0,
+      lastActionWasAnswer: false,
+      answerVisible: false,
+    };
+
+    function setButtonsEnabled(enabled) {
+      els.btnCorrect.disabled = !enabled;
+      els.btnIncorrect.disabled = !enabled;
+      els.btnShowAnswer.disabled = !enabled;
+    }
+
+    function hideAnswer() {
+      state.answerVisible = false;
+      els.answer.classList.remove("visible");
+      els.answer.textContent = "";
+      els.btnShowAnswer.textContent = "Ukázat odpověď";
+    }
+
+    function toggleAnswer() {
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) return;
+      const item = state.remaining[state.currentIndex];
+      state.answerVisible = !state.answerVisible;
+
+      if (!state.answerVisible) {
+        hideAnswer();
+        return;
+      }
+
+      const answerText = (item.answer || "").trim();
+      els.answer.textContent = answerText.length > 0 ? answerText : "Odpověď není ve zdrojovém Markdownu uvedena.";
+      els.answer.classList.add("visible");
+      els.btnShowAnswer.textContent = "Skrýt odpověď";
+    }
+
+    function updateUI() {
+      els.remaining.textContent = String(state.remaining.length);
+      els.correct.textContent = String(state.correct);
+      els.incorrect.textContent = String(state.incorrect);
+
+      if (state.remaining.length === 0) {
+        els.question.textContent = "Hotovo. Nezbývá žádná otázka.";
+        els.hint.textContent = "Můžeš dát Restart a začít znovu.";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) {
+        els.question.textContent = "Klikni na Další otázka.";
+        els.hint.textContent = "";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      const item = state.remaining[state.currentIndex];
+      els.question.textContent = item.question;
+      els.hint.textContent = state.lastActionWasAnswer
+        ? "Označeno. Pokračuj tlačítkem Další otázka."
+        : "Označ výsledek: Správně / Špatně.";
+
+      setButtonsEnabled(!state.lastActionWasAnswer);
+      if (!state.answerVisible) hideAnswer();
+    }
+
+    function pickNextQuestion() {
+      if (state.remaining.length === 0) {
+        state.currentIndex = -1;
+        updateUI();
+        return;
+      }
+
+      state.currentIndex = randInt(state.remaining.length);
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    function markCorrect() {
+      if (state.currentIndex < 0) return;
+      state.correct += 1;
+      state.remaining.splice(state.currentIndex, 1);
+      state.currentIndex = -1;
+      state.lastActionWasAnswer = true;
+      hideAnswer();
+      updateUI();
+    }
+
+    function markIncorrect() {
+      if (state.currentIndex < 0) return;
+      state.incorrect += 1;
+      state.currentIndex = -1;
+      state.lastActionWasAnswer = true;
+      hideAnswer();
+      updateUI();
+    }
+
+    function restart() {
+      const source = els.sourceEditor.value;
+      state.allItems = extractQAFromMarkdown(source);
+      state.remaining = [...state.allItems];
+      state.currentIndex = -1;
+      state.correct = 0;
+      state.incorrect = 0;
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    els.btnNext.addEventListener("click", pickNextQuestion);
+    els.btnCorrect.addEventListener("click", markCorrect);
+    els.btnIncorrect.addEventListener("click", markIncorrect);
+    els.btnShowAnswer.addEventListener("click", toggleAnswer);
+    els.btnRestart.addEventListener("click", restart);
+
+    els.sourceEditor.value = (els.sourceMd.textContent || "").trim();
+    restart();
+  </script>
+</body>
+</html>
