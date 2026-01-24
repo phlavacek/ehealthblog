@@ -1,0 +1,1258 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Testovací otázky</title>
+  <style>
+    :root {
+      --bg: #f4f7ff;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #2563eb;
+      --ok: #16a34a;
+      --bad: #dc2626;
+      --border: rgba(15, 23, 42, 0.14);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 800px at 20% 0%, rgba(37,99,235,0.16), transparent 60%),
+                  radial-gradient(1200px 800px at 100% 30%, rgba(22,163,74,0.12), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 820px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    header {
+      display: grid;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      min-height: 66px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .value.ok { color: var(--ok); }
+    .value.bad { color: var(--bad); }
+
+    .question {
+      font-size: 18px;
+      line-height: 1.35;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 14px 14px;
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      min-height: 52px;
+      touch-action: manipulation;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button:active { transform: translateY(1px); }
+
+    button.primary {
+      background: linear-gradient(180deg, rgba(37,99,235,0.18), rgba(37,99,235,0.08));
+      border-color: rgba(37,99,235,0.40);
+    }
+
+    button.ok {
+      background: linear-gradient(180deg, rgba(22,163,74,0.18), rgba(22,163,74,0.08));
+      border-color: rgba(22,163,74,0.40);
+    }
+
+    button.bad {
+      background: linear-gradient(180deg, rgba(220,38,38,0.16), rgba(220,38,38,0.07));
+      border-color: rgba(220,38,38,0.40);
+    }
+
+    button.accent {
+      background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.06));
+      border-color: rgba(37,99,235,0.30);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .row button {
+      flex: 1 1 140px;
+      min-height: 44px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      margin: 10px 0 0 0;
+    }
+
+    details {
+      margin-top: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .answer {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      background: rgba(37, 99, 235, 0.05);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: none;
+    }
+
+    .answer.visible {
+      display: block;
+    }
+
+    @media (max-width: 520px) {
+      .stats { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: 1fr; }
+      .question { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Testovací otázky</h1>
+      <div class="sub">Náhodně vybírá otázky. Označ „Správně“. Správně zodpovězené otázky se vyřadí.</div>
+    </header>
+
+    <section class="card" aria-label="Otázka">
+      <p class="question" id="question">Načítám otázky…</p>
+
+      <div class="controls">
+        <button class="ok" id="btnCorrect" type="button">Správně</button>
+      </div>
+
+      <div class="row">
+        <button class="accent" id="btnShowAnswer" type="button">Ukázat odpověď</button>
+      </div>
+
+      <div class="answer" id="answer" aria-live="polite"></div>
+
+      <div class="row">
+        <button class="primary" id="btnNext" type="button">Další otázka</button>
+        <button id="btnRestart" type="button">Restart</button>
+      </div>
+
+      <p class="muted" id="hint"></p>
+
+      <details>
+        <summary>Upravit seznam otázek (pokročilé)</summary>
+        <p class="muted">Aplikace načítá otázky z řádků začínajících <code>### </code> a odpověď bere jako text pod otázkou až do dalšího nadpisu. Můžeš sem vložit vlastní Markdown a dát Restart.</p>
+        <textarea id="sourceEditor" spellcheck="false"></textarea>
+      </details>
+    </section>
+
+    <section class="card stats" aria-label="Statistiky">
+      <div class="stat">
+        <div class="label">Zbývá</div>
+        <div class="value" id="remaining">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Správně</div>
+        <div class="value ok" id="correct">0</div>
+      </div>
+    </section>
+  </div>
+
+  <script type="text/plain" id="source-md"># Vypracované otázky
+
+## 1 Princip právní jistoty
+
+### Co je princip právní jistoty a jaké jsou jeho hlavní složky?
+
+Princip právní jistoty je spojen se stabilitou práva a jeho výkladu, jednotností a bezrozporností právního řádu, srozumitelností a přístupností práva, vyloučením nedůvodné retroaktivity, předvídatelností soudních rozhodnutí a důvěrou v právo.
+
+Projevuje se v tvorbě i aplikaci práva: právo má být poznatelné a soudy mají v podobných případech rozhodovat podobně.
+
+## I Presumpce správnosti právních aktů
+
+### Co znamená presumpce správnosti právních aktů a jaký je rozdíl mezi vadným a nicotným aktem?
+
+Presumpce správnosti znamená, že dokud příslušný orgán autoritativně neprokáže opak, právní akt (normativní i individuální) je považován za platný bez ohledu na vady.
+
+Vadný akt právně existuje a může vyvolávat právní účinky, dokud není zrušen.
+
+Nicotný akt (paakt, zdánlivý akt) právně neexistuje a žádné právní účinky nemá.
+
+## II Právo (pojem)
+
+### Jak lze vymezit pojem „právo“ a jaký je rozdíl mezi objektivním a subjektivním právem?
+
+Právo je systém závazných pravidel vytvořených nebo uznaných státem, která stát vynucuje vůči osobám, nad nimiž je schopen uplatnit moc, včetně trestání porušení.
+
+Objektivní právo je souhrn (systém) právních norem.
+
+Subjektivní právo (oprávnění) je právní normou určená možnost chování nebo jednání právního subjektu.
+
+### Co je heteronomní a autonomní právo?
+
+Heteronomní právo je takové, kde tvůrce objektivního práva je odlišný od jeho adresáta.
+
+Autonomní právo je takové, kde normotvůrce je totožný s adresátem.
+
+## III Vlastnosti práva a normativních systémů
+
+### Jaké jsou specifické znaky práva oproti jiným normativním systémům?
+
+Právo se od jiných normativních systémů odlišuje zejména:
+
+- všeobecnou závazností
+- vynutitelností státní mocí
+- zvláštní formou
+- obecností
+- normativností
+
+## IV Právní stát
+
+### Co je právní stát a jaké jsou klíčové projevy vlády práva?
+
+Právní stát je založen na vládě práva (princip legality): výkon veřejné moci je podřízen právním pravidlům, která jsou dána předem a aplikována právními profesionály.
+
+Projevy zahrnují:
+
+- legální licenci: každý může činit, co mu zákon výslovně nezakazuje (čl. 2 odst. 4 Ústavy)
+- enumerativnost veřejnoprávních pretenzí: státní moc lze uplatňovat jen v případech, mezích a způsoby stanovenými zákonem (čl. 2 odst. 3 Ústavy)
+
+## V Pozitivní právo
+
+### Co je pozitivní právo a jaké jsou (Weyrovy) znaky pozitivního práva?
+
+Pozitivní právo je systém platných pravidel jako projevů lidské vůle, která působí na adresáty bez ohledu na jejich vůli; je vytvořeno uznaným normotvůrcem, má určitou formu a porušení je spojeno s nepříznivými následky.
+
+Weyrovy znaky pozitivního práva:
+
+- je výslovně stanovené
+- pochází od empirického normotvůrce
+- působí na společnost (fakticita)
+- je změnitelné (s výjimkami)
+- je úmyslně stanovené
+
+## VI Přirozené právo
+
+### Jak lze charakterizovat přirozené právo?
+
+Přirozené právo je systém pravidel, která nejsou vytvářena člověkem, ale jsou považována za právně významná. Bývá vnímáno jako neměnné a všem stejné, obtížně prokazatelné, často spojované se stabilním prvkem v proměnlivém právním systému.
+
+Může ovlivňovat pozitivní právo tím, že pravidla jsou pro svůj obsah považována za dobrá, správná nebo spravedlivá.
+
+## VII Pravidla přirozeného práva (Hugo Grotius)
+
+### Jaké příklady pravidel přirozeného práva uvádí Hugo Grotius?
+
+Grotius mezi pravidla přirozeného práva řadí zejména:
+
+- nezmocnit se toho, co patří jiným
+- vrátit cizí věc i přínos z ní
+- plnit sliby a napravit zaviněné škody
+- uznat existenci věcí, které si zaslouží trest
+
+Jde o příklady, nikoli úplný výčet.
+
+## VIII Struktura a systém práva
+
+### Jaký je rozdíl mezi strukturou práva a systémem práva?
+
+Struktura práva označuje způsob uspořádání práva.
+
+Systém práva je tvořen vzájemným působením jeho prvků (norem, pramenů, institucí, hodnot, procedur a chování aktérů) ve vzájemné interakci.
+
+Struktura znamená uspořádání práva, systém práva je tvořen jeho částmi ve vzájemné interakci.
+
+## IX Charakteristiky systému práva
+
+### Jaké charakteristiky se uvádějí u systému práva?
+
+Charakteristiky systému práva omezují možnosti, jak s právem nakládat (interpretovat a aplikovat). Uvádí se zejména, že právní systém je:
+
+- uspořádaný
+- komplexní
+- bezrozporný
+- hierarchický
+- diferencovaný
+- autonomní (otevřený/uzavřený)
+- cílený
+- dynamický
+
+## X Struktura právního systému
+
+### Co je právní institut a co je právní odvětví?
+
+Právní institut je funkční komplex systematicky uspořádaných právních norem odlišitelný od jiných institutů, upravující určitý druh typově shodných společenských vztahů (lze chápat i teleologicky dle účelu).
+
+Právní odvětví je funkčně samostatná část systému práva určená rozlišovacími znaky, zejména regulovaným objektem a způsobem regulace (metodou právní regulace); na rovině pramenů se obvykle utváří kolem dominantního kodexu.
+
+## XI Veřejné a soukromé právo
+
+### V čem spočívá právní dualismus veřejného a soukromého práva a jaké jsou typické znaky obou oblastí?
+
+Právní dualismus znamená dělení práva na veřejné a soukromé.
+
+Pro soukromé právo je typická svoboda (co zákon nezakazuje, je dovoleno) a převaha dispozitivní regulace (možnost odchýlit se vlastní úpravou).
+
+Ve veřejném právu převládá kogentní metoda regulace a výslovné stanovení práv a povinností; veřejné právo souvisí se suverenitou a stanovováním limitů vládnutí.
+
+## XII Definice soukromého práva v kontextu občanského zákoníku
+
+### Jak zní jednoduché „kodexové“ vymezení soukromého práva?
+
+Soukromé právo je to, co obsahuje občanský zákoník.
+
+## XIII Teorie odlišování veřejného a soukromého práva
+
+### Jaké jsou vybrané teorie odlišování veřejného a soukromého práva?
+
+Uvádějí se zejména:
+
+- zájmová teorie: soukromé chrání zájem jednotlivce, veřejné zájem společenství
+- mocenská teorie: veřejné vztahy jsou vertikální (nadřízenost/podřízenost), soukromé horizontální (rovnost)
+- organická teorie: kritériem je pozice subjektu vůči celku (členství ve svazku vs. jednotlivec)
+- dispozitivní teorie: veřejné má spíše kogentní normy, soukromé smluvní volnost
+- opatrovnická teorie: veřejné reguluje situace s opatrovníkem veřejného zájmu
+- teorie příslušnosti: veřejné se váže na správní úřady, soukromé na činnost soudů
+
+## XIV Právo mezinárodní a právo vnitrostátní
+
+### Jak se liší mezinárodní právo, právo EU a vnitrostátní právo?
+
+Mezinárodní právo reguluje vztahy v mezinárodním společenství; typicky není určeno k přímé regulaci vztahů mezi lidmi a jeho dopad na jednotlivce je výjimečný.
+
+Právo EU je samostatný právní systém s přímými i nepřímými vnitrostátními účinky; členské státy na EU přenesly část pravomocí.
+
+V právu EU se projevuje přímý účinek do vnitrostátního práva, a to nejen ve vztazích mezi státem a jednotlivcem, ale i mezi jednotlivci.
+
+## XV Chápání pojmu „prameny práva“
+
+### Jaké významy může mít pojem „prameny práva“?
+
+Rozlišují se zejména:
+
+- formální prameny: skutečnosti nesoucí normativní tvrzení a určující jejich závaznost
+- zdroje poznání: materiály vedoucí k informacím o právu (jeden pramen může spadat do obou kategorií)
+- orgány: orgány či lidé podílející se na tvorbě práva
+- materiální prameny: skutečnosti ovlivňující obsah práva
+- prameny platnosti: zdroje, z nichž právo získává platnost a které určují jeho obsah (včetně interpretací)
+
+## XVI Materiální prameny práva
+
+### Co jsou materiální prameny práva a k čemu mohou být užitečné?
+
+Materiální prameny jsou skutečnosti, které vedly ke vzniku práva a ovlivňují jeho obsah i podobu (např. politické události, společenské jevy, geografická poloha).
+
+Mohou pomoci odhalit, jaký problém měla právní úprava řešit, a tím napomoci interpretaci normativních textů.
+
+## XVII Formální prameny práva
+
+### Co jsou formální prameny práva a jaký je jejich význam?
+
+Formální prameny jsou autoritativní a institucionalizované zdroje nesoucí právní normy. Zajišťují informovanost o normách a jsou zdrojem jejich formální autority a legitimity.
+
+Pramen práva není právní pravidlo samo o sobě; často jde o text schválený oficiálním tvůrcem práva, který právní normy nese.
+
+## XVIII Formální prameny práva – seznam
+
+### Jaké jsou standardní a méně obvyklé formální prameny práva?
+
+Standardní prameny:
+
+- právní předpisy
+- soudní precedent
+- normativní smlouvy
+- právní obyčeje
+
+Méně obvyklé prameny:
+
+- právní literatura
+- právní apendixy neprávních publikací
+
+## XIX Právní předpis
+
+### Co je právní předpis a jaké má základní znaky?
+
+Právní předpis je písemný normativní právní akt orgánu s legislativní pravomocí, formálně publikovaný, jehož obsahem je právní norma.
+
+Je autentickým a závazným prostředkem komunikace právní normy a všeobecně závazným dokumentem vyjadřujícím právní normy.
+
+## XX Právní předpis a normativní právní akt
+
+### Jaký je vztah pojmů „právní předpis“ a „normativní právní akt“?
+
+Normativní právní akt je pojem nadřazený právnímu předpisu: každý právní předpis je normativní právní akt, ale ne každý normativní právní akt je právním předpisem.
+
+Právním předpisem nejsou např. akty určené jen pro individuální případy nebo interní normativní instrukce. Pokud má individuální právní akt formu normativního právního aktu, jde o extenzi moci zákonodárné do moci výkonné.
+
+## XXI Znaky právního předpisu
+
+### Jaké znaky se uvádějí u právního předpisu?
+
+Uvádí se zejména:
+
+- formálnost (zveřejnění v předepsané formě)
+- písemnost
+- legislativní pravomoc tvůrce
+- imperativní charakter
+- všeobecná závaznost
+
+Podle ESLP musí být pramen práva dostupný, přesný a předvídatelný.
+
+## XXII Dělení právních předpisů v ČR
+
+### Jaké základní druhy právních předpisů se uvádějí v České republice?
+
+Uvádí se zejména:
+
+- Ústava
+- ústavní zákony
+- zákony
+- zákonná opatření
+- nařízení vlády
+- vyhlášky ministerstev a jiných správních úřadů
+- obecně závazné vyhlášky krajů/obcí
+- nařízení krajů/obcí
+
+## XXIII Právní síla
+
+### Co je právní síla a k čemu slouží?
+
+Právní síla je princip právní logiky sloužící k řešení kolizí v právním systému. Je to vlastnost související s umístěním právního předpisu ve struktuře právního řádu a předchází hierarchii právního řádu.
+
+Neuplatní se typicky u normativních smluv, právních obyčejů či precedentů, kde je derogační schopnost dána jinak než strukturou.
+
+## XXIV Dělení právních předpisů
+
+### Jak se dělí právní předpisy podle právní síly a podle orgánu, který je vydal?
+
+Podle právní síly:
+
+- primární (zákonné)
+- sekundární (podzákonné, delegovaná legislativa)
+
+Sekundární tvorba je odvozena od primární (delegace/zmocnění). Vláda má generální zmocnění k vydávání nařízení, ministerstva zpravidla potřebují zvláštní zmocnění.
+
+Podle orgánu:
+
+- původní (originární)
+- odvozené (derivativní)
+
+## XXV Právní předpisy Evropské unie
+
+### Jaký je rozdíl mezi nařízením a směrnicí EU a jak se projevuje vztah práva EU k vnitrostátnímu právu?
+
+Nařízení obsahuje pravidla závazná na úrovni EU i členských států a je přímo použitelné bez potřeby zavedení do vnitrostátního práva.
+
+Směrnice určuje, čeho se má dosáhnout, ale nestanoví způsob; závazná je pro členské státy a zpravidla neobsahuje přímo použitelná pravidla pro subjekty národního práva.
+
+Mezi právem EU a vnitrostátním právem neplatí derogační vztahy; právo EU má aplikační přednost.
+
+## XXVI Soudní precedent
+
+### Co je soudní precedent a jaké jsou jeho znaky?
+
+Soudní precedent je dřívější rozhodnutí vyššího soudu obsahující obecná pravidla chování uznávaná jako autoritativní pro rozhodování dalších srovnatelných sporů.
+
+Uvádějí se znaky: prvotnost, vytvoření soudem, formální závaznost, obecnost, normativnost a veřejnost.
+
+## XXVII Části precedentu
+
+### Co je ratio decidendi a obiter dictum?
+
+Ratio decidendi je jádro precedentu: pravidlo, bez něhož by soud rozhodl jinak; je závazné pro budoucí obdobné případy.
+
+Obiter dictum je nezávazné vyjádření názoru soudu (vysvětlení, jak soud dospěl k použitému pravidlu a co jej ovlivnilo).
+
+## XXVIII Precedent v ČR a judikatura
+
+### Jaký je vztah precedentu a judikatury v českém právu?
+
+V ČR precedent v kontinentálním smyslu neexistuje, a to ani v podobě judikatury.
+
+Judikatura je ustálený způsob, jak soudy (zejména vyšší) interpretují právo a aplikují normy; není autoritativně závazným pramenem, ale nelze ji přehlížet. Odchýlení musí být odůvodněné a nesmí být svévolné.
+
+## XXIX Normativní smlouva
+
+### Co je normativní smlouva a jaké typy normativních smluv se rozlišují?
+
+Normativní smlouva je převážně písemný pramen práva založený na konsenzu, obsahující obecná pravidla chování s právními účinky.
+
+Rozlišují se:
+
+- mezinárodní smlouvy
+- vnitrostátní smlouvy (delegovaná právotvorba, autoritu jim dává zákon)
+
+Mezinárodní smlouvy mohou mít aplikační přednost: rozporný zákon se neruší, ale nepoužije (latence).
+
+## XXX Právní literatura
+
+### Jaké jsou dvě pojetí právní literatury jako pramene práva?
+
+Právní literatura může být:
+
+- tradičně chápaný pramen práva (obsahuje stanovení závazných způsobů jednání)
+- podpůrný zdroj napomáhající porozumění závazným formálním pramenům
+
+Její autorita je dána osobou autora; jako formální pramen má splňovat preskriptivnost, určení praktikujícím právníkům a odpovídající argumentační styl.
+
+## XXXI Právní obyčej
+
+### Jaké jsou znaky právního obyčeje?
+
+Znaky právního obyčeje zahrnují:
+
+- dlouhodobost používání (usus longaevus)
+- přesvědčení o právní závaznosti (opinio iuris/opinio necessitatis)
+- uznání státem
+- samostatnost autority
+- určitost
+
+## XXXII „Negativní obyčej“
+
+### Co je obsoletnost a desuetudo?
+
+Obsoletnost je pravidlo, které není považováno za platné a není orgány veřejné moci vynucováno, přesto stále splňuje formální znaky existence.
+
+Desuetudo znamená, že právní norma vyšla z užívání.
+
+## XXXIII Tvorba práva
+
+### Jaké typy tvorby práva se rozlišují?
+
+Tvorba práva je cílevědomá a záměrná činnost směřující k vytváření a formulování právních pravidel.
+
+Rozlišují se:
+
+- spontánní vznik (typicky právní obyčeje)
+- konsenzuální tvorba (normativní smlouvy)
+- imperativní tvorba (autoritativní rozhodnutí orgánu s legislativní pravomocí)
+
+## XXXIV Náležitosti tvorby práva
+
+### Jaké jsou formální a obsahové náležitosti tvorby práva?
+
+Formální náležitosti:
+
+- legislativní pravomoc tvůrce
+- legislativní působnost
+- princip hierarchie právních předpisů a norem
+- předepsaný proces tvorby
+
+Obsahové náležitosti:
+
+- normativní
+- aplikační
+- literární
+- faktografické
+
+## XXXV Legislativní pravomoc a působnost
+
+### Jaký je rozdíl mezi legislativní pravomocí a legislativní působností?
+
+Legislativní pravomoc je schopnost (možnost) vytvářet právní normy.
+
+Legislativní působnost je omezení realizace legislativní pravomoci na svěřený rozsah.
+
+## XXXVI Pravomoc a kompetence
+
+### Jaký je rozdíl mezi pravomocí a kompetencí?
+
+Pravomoc je možnost, případně povinnost orgánu veřejné moci realizovat státní (veřejnou) moc ve stanovené formě.
+
+Kompetence je konkrétní věcné vymezení podmínek realizace pravomoci stanovením jejího rozsahu a obsahu; nelze ji chápat jako subjektivní právo a nelze ji přenášet, ledaže tak stanoví ústava.
+
+## XXXVII Špatné normy podle Lona L. Fullera
+
+### Jaké typy „špatných norem“ uvádí Lon L. Fuller?
+
+Uvádí se zejména, že normy jsou špatné, pokud:
+
+1. jsou přijímány ad hoc a postrádají obecnost
+2. nejsou zveřejněny
+3. jsou retroaktivní
+4. jsou nesrozumitelné
+5. si odporují
+6. vyžadují neuskutečnitelné chování
+7. se často mění
+8. se liší od své skutečné aplikace
+
+## XXXVIII Legislativní proces
+
+### Jaké jsou základní fáze legislativního procesu?
+
+Uvádí se:
+
+1. vytvoření věcného záměru
+2. příprava návrhu
+3. projednávání návrhu
+4. schvalování
+5. promulgace (podepisování)
+6. publikace
+
+## XXXIX Právní norma
+
+### Jaké jsou formální a materiální znaky právní normy a jaké jsou její prvky?
+
+Právní norma je poznatelné pravidlo chování stanovené státní mocí, určující, jak se má obecně určený adresát chovat.
+
+Formální znaky: procedurální předpoklady vzniku a publikace.
+
+Materiální znaky: normativnost, všeobecná závaznost, obecnost, vynutitelnost státem.
+
+Prvky právní normy: subjekt, objekt a obsah.
+
+## XL Normativní modality
+
+### Jaké jsou základní normativní modality (příkaz, zákaz, dovolení)?
+
+Příkaz vyjadřuje povinnost pozitivně: uvedená alternativa je tou, kterou má subjekt dodržet.
+
+Zákaz vyjadřuje povinnost negativně: určitá alternativa chování je vyloučena.
+
+Dovolení může být explicitní (výslovné) nebo vyplývat z neupravenosti či z nezakázaného jednání.
+
+## XLI Struktura právní normy
+
+### Z čeho se skládá právní norma a jaké je „dvouprvkové“ pojetí?
+
+Tradičně se uvádí hypotéza, dispozice a sankce.
+
+Hypotéza vyjadřuje podmínky pro uplatnění normy.
+
+Dispozice nese vlastní pravidlo chování.
+
+Sankce je negativní následek při porušení dispozice.
+
+Často se uvádí dvouprvkové pojetí: podmínka a následek.
+
+## XLII Působnost právní normy
+
+### Co je působnost právní normy a jaké základní druhy působnosti se rozlišují?
+
+Působnost je poměr právní normy k okolí (čas, území, typ chování, adresáti). Rozlišuje se např. osobní, věcná, územní a časová působnost a dále obecná, zvláštní a výjimečná.
+
+## XLIII Osobní (personální) působnost
+
+### Co je osobní působnost právní normy a jak se projevuje imunita?
+
+Osobní působnost určuje okruh adresátů, kterým z normy plynou práva a povinnosti.
+
+Imunita představuje výjimečný rozsah osobní působnosti; uvádí se absolutní (hmotněprávní) a relativní (procesní) imunita.
+
+## XLIV Územní (prostorová) působnost
+
+### Co je územní působnost právní normy?
+
+Územní působnost je vztah právní normy k určitému území; stanoví, kde (a nad/pod čím) mohou právní normy vyvolat předvídané následky.
+
+## XLV Věcná působnost
+
+### Co je věcná působnost právní normy?
+
+Věcná působnost vymezuje okruh vztahů nebo typů chování, které právní norma reguluje; specifikuje skutkové podstaty, pro něž norma platí.
+
+## XLVI Časová (temporální) působnost
+
+### Co je časová působnost právní normy?
+
+Časová působnost je časový rozsah účinnosti normy: určuje okamžik vzniku, okamžik zániku a rozmezí, v němž norma vyvolává právní následky.
+
+## XLVII Vznik právní normy
+
+### Jaký je vztah platnosti a účinnosti právní normy?
+
+Publikace (zveřejnění) je moment, kterým norma nabývá platnosti.
+
+Pouze platná norma ještě nemusí vyvolávat právní následky; ty norma vyvolává až po nabytí účinnosti.
+
+Doba mezi platností a účinností se nazývá legisvakanční lhůta.
+
+## XLVIII Účinnost
+
+### Jak obvykle právní normy nabývají účinnosti?
+
+Účinnost nastává obvykle po uplynutí doby od platnosti (publikace). Není-li stanoveno jinak, právní normy nabývají účinnosti k 1. lednu nebo 1. červenci.
+
+Ve výjimečných případech může norma nabýt účinnosti dnem vyhlášení nebo dnem následujícím; někdy může být účinnost stanovena i později.
+
+## XLIX Zánik právní normy
+
+### Co je derogace a jaké jsou pojmy abrogace a obrogace?
+
+Derogace je zánik časové působnosti právní normy do budoucna.
+
+Abrogace je úplné zrušení právní normy nebo právního předpisu.
+
+Obrogace je nahrazení právní normy normou jinou (novelizace).
+
+Zrušená norma nemůže být obnovena bez zopakování legislativní procedury.
+
+## L Důvody derogace
+
+### Jaké se uvádějí vnitřní a vnější důvody derogace?
+
+Vnitřní důvody: norma zaniká, protože její doba trvání byla předem omezena (např. stmívací klauzule).
+
+Vnější důvody: derogace rozhodnutím příslušného orgánu; výslovná derogace nebo derogace mlčky.
+
+## LI Aktivní a pasivní derogace
+
+### Co je aktivní a pasivní derogace?
+
+Aktivní derogace se vztahuje k derogujícímu (rušícímu) předpisu.
+
+Pasivní derogace se vztahuje k rušenému (derogovanému) předpisu.
+
+## LII Derogační klauzule
+
+### Jaké druhy derogačních klauzulí se rozlišují?
+
+- generální derogační klauzule
+- generální derogační klauzule s demonstrativním výčtem
+- taxativní (enumerativní) derogační klauzule
+
+## LIII Derogace mlčky
+
+### Jaká pravidla se uvádějí u derogace mlčky?
+
+Uvádí se zejména:
+
+- lex superior derogat legi inferiori
+- lex posterior derogat legi priori
+- lex specialis derogat legi generali
+
+Někdy se o nich uvažuje jako o interpretačních pravidlech přednosti.
+
+## LIV Následky právní normy v čase
+
+### Jaký je rozdíl mezi ultraaktivitou, nepravou retroaktivitou, retrospektivou a pravou retroaktivitou?
+
+Ultraaktivita: právní vztahy vzniklé za účinnosti starého předpisu se řídí starým předpisem i po jeho zrušení.
+
+Nepravá retroaktivita: vztahy vzniklé před účinností nové úpravy se posuzují podle nové úpravy až od její účinnosti do budoucna.
+
+Retrospektiva: nová úprava reguluje vztahy vzniklé dříve, a to do budoucna, ale posuzuje i podmínky vzniku.
+
+Pravá retroaktivita: nová úprava posuzuje vztahy i do minulosti (mění povahu minulých následků).
+
+## LV Pravá a nepravá retroaktivita
+
+### Proč je pravá retroaktivita problematická a v čem se liší od retrospektivy?
+
+Pravá retroaktivita je velký zásah do právní jistoty; musí být stanovena výslovně a jen výjimečně.
+
+Retrospektiva je menší zásah: reguluje nové důsledky minulých skutečností, ale jen od vzniku nové normy do budoucna.
+
+Nepravá retroaktivita je obecný znak působení práva; pokud ji normotvůrce nechce uplatnit, musí ji výslovně vyloučit intertemporální normou.
+
+## LVI Druhy právních norem
+
+### Jaké základní typy právních norem se uvádějí?
+
+Uvádí se např. rozlišení:
+
+- perfektní a imperfektní
+- podmíněné a nepodmíněné
+- abstraktní a kazuistické
+- operativní a definiční
+- dovolující, zakazující a přikazující
+- obecné (generální) a zvláštní (speciální)
+- kompetenční
+
+## LVII Normy kogentní a dispozitivní
+
+### Jaký je rozdíl mezi kogentní a dispozitivní právní normou?
+
+Dispozitivní norma stanoví pravidlo, ale umožňuje adresátům vytvořit si pravidlo vlastní, které je pro ně závazné a stát jej vynucuje.
+
+Kogentní norma stanoví práva a povinnosti bez ohledu na vůli subjektů a vylučuje odchylku soukromou vůlí.
+
+## LVIII Relativně konkrétní a relativně abstraktní normy
+
+### Co znamená relativní abstraktnost právní normy?
+
+Relativně abstraktní normy dávají větší prostor k uvážení (diskreci), často kvůli neurčitým právním pojmům. Relativně konkrétní formulace tak široký prostor zpravidla nedává.
+
+## LIX Výčty
+
+### Jaký je rozdíl mezi kumulativním, alternativním, taxativním a demonstrativním výčtem?
+
+Kumulativní: musí být splněny všechny podmínky (realizovány všechny prvky).
+
+Alternativní: postačí, aby nastal jeden z vypočtených jevů.
+
+Taxativní: uzavřený (úplný) výčet, nelze přidávat.
+
+Demonstrativní: otevřený, umožňuje přidávat další prvky obdobné povahy.
+
+## LX Odkazy
+
+### Jaké druhy odkazů (odkazujících norem) se uvádějí?
+
+- blanketové odkazy (neurčité)
+- odkazující (ke konkrétnímu předpisu či části; statické/dynamické)
+- kolizní
+- intertemporální
+
+## LXI Interpretace práva
+
+### Jaký je cíl interpretace právních textů a jaké jsou funkce interpretace?
+
+Interpretace se snaží řádnými metodami odhalit smysl a účel textu.
+
+Funkce interpretace:
+
+- poznávací (kognitivní)
+- konstrukční
+- vysvětlovací (explikativní)
+
+## LXII Metody interpretace práva
+
+### Jaké standardní a další metody interpretace práva se uvádějí?
+
+Standardní metody:
+
+- jazyková
+- logická
+- systematická
+
+Další metody:
+
+- teleologická
+- komparativní
+- historická
+
+## LXIII Argumenty tzv. logického výkladu práva
+
+### Jaké argumenty se uvádějí v rámci logického výkladu?
+
+Uvádí se např.:
+
+- argumentum e contrario
+- argumentum a fortiori (a minori ad maius; a maiori ad minus)
+- argumentum per analogiam (a pari)
+- reductio ad absurdum
+- reductio ad impossibile
+
+## LXIV Analogii
+
+### Kdy lze použít analogii a jaký je rozdíl mezi analogií zákona a analogií práva?
+
+Analogii lze použít zejména při mezerách v právu, pokud je více podobností než rozdílů, věcná a právní podstata je stejná a nejde o záměrnou mezeru.
+
+Analogie zákona (analogia legis) posuzuje neregulovanou skutečnost podle norem obsažených v předpisu pro podobnou skutečnost.
+
+Analogie práva (analogia iuris) používá obecné právní zásady odvětví či práva jako celku.
+
+## LXV Systematický výklad
+
+### V čem spočívá systematická metoda výkladu práva?
+
+Systematická metoda využívá uspořádání právního řádu a požadavek, aby jeho části tvořily funkční a bezrozporný celek; interpretace vychází z normativního okolí i z místa ustanovení v právním systému.
+
+## LXVI Výklad zužující a rozšiřující
+
+### Kdy se používá restriktivní a extenzivní výklad?
+
+Používá se zejména u neostrých či neurčitých pojmů.
+
+Extenzivní výklad přiřazuje pojmu širší rozsah, restriktivní jej zužuje. Rozšířit či zúžit význam lze jen při existenci důvodu (např. principy, jiné části předpisu, definiční normy).
+
+## LXVII Historický výklad
+
+### Co zkoumá historický výklad práva?
+
+Zkoumá podmínky vzniku textu (dobu vzniku a souvislosti). Může přinést cenné informace podporující jiné interpretační metody, ale nemusí vždy odpovídat aktuálním společenským potřebám.
+
+## LXVIII Teleologický výklad
+
+### Co je teleologický výklad a z čeho se při něm vychází?
+
+Teleologický výklad hledá účel právní normy/předpisu. Primárně by měl vycházet z účelu obsaženého v předpisu, sekundárně lze použít např. důvodové zprávy nebo záznamy z legislativního procesu.
+
+## LXIX Výklad podle interpreta a závaznosti
+
+### Jaké druhy výkladu se uvádějí podle interpreta a závaznosti?
+
+Uvádí se např.:
+
+- autentický výklad (tvůrce textu)
+- legální výklad (zmocněný subjekt)
+- oficiální výklad (nadřízený subjekt podřízenému)
+- výklad orgánu autoritativně aplikujícího právo (relativně závazný)
+- doktrinální výklad (odborníci)
+- výklad právní praxe
+- laický výklad
+
+## LXX Právní skutečnosti
+
+### Co jsou právní skutečnosti a jaké mohou mít základní členění?
+
+Právní skutečnosti jsou cokoli, s čím právo spojuje právně relevantní následek; vedou ke vzniku, změně nebo zániku subjektivních práv a povinností.
+
+Zahrnují subjektivní (vůle) i objektivní skutečnosti a navazují na právní jednání, reálné akty i protiprávní jednání.
+
+## LXXI Subjekt právních vztahů
+
+### Co je právní subjektivita a jaké složky se u subjektu uvádějí?
+
+Podstatná je právní subjektivita jako právem daná vlastnost.
+
+Uvádí se:
+
+- způsobilost k právům a povinnostem (právní osobnost)
+- způsobilost k právním úkonům (svéprávnost)
+- deliktní způsobilost
+
+## LXXII Teorie právnických osob
+
+### Jaké jsou vybrané teorie právnických osob?
+
+- teorie fikce (např. Savigny): subjekt je spojen s vůlí; entity bez vůle jsou fikcí
+- reálné teorie: sdružení lidí může mít vůli; právnická osoba má reálnou existenci uznanou právem
+- teorie zájmová: subjektem je ten, kdo požívá užitky, které právo nese
+
+## LXXIII Právní skutečnosti dle dokazatelnosti
+
+### Jaké druhy právních skutečností se rozlišují podle dokazatelnosti?
+
+- prokazatelné
+- předpokládané (domněnky a fikce; domněnky vyvratitelné/nevyvratitelné)
+- známé (notority a oficiality)
+
+## LXXIV Právní vztahy (charakteristika)
+
+### Jak lze stručně charakterizovat právní vztahy?
+
+Právní vztahy jsou individuální a strukturované; jejich existence souvisí s právní normou a s individuálním určením subjektů, objektu a obsahu.
+
+## LXXV Struktura právního vztahu
+
+### Jaké jsou základní prvky právního vztahu?
+
+Základní prvky právního vztahu jsou:
+
+- subjekt
+- objekt
+- obsah
+
+Předpoklady mohou zahrnovat právní skutečnosti; právní norma bývá obligatorní prvek.
+
+## LXXVI Subjektivní práva (oprávnění)
+
+### Co je subjektivní právo a jaký je rozdíl mezi absolutním a relativním subjektivním právem?
+
+Subjektivní právo je možnost chovat se způsobem předvídaným právní normou, možnost požadovat plnění povinnosti a možnost požadovat ochranu od státu (nárok). Subjektivní právo bez nároku je naturální obligace.
+
+Absolutní subjektivní právo: identifikovaný oprávněný subjekt, kterému odpovídá povinnost všech ostatních zdržet se zásahů.
+
+Relativní subjektivní právo: oprávněný i povinný subjekt jsou určeny.
+
+## LXXVII Právní povinnosti
+
+### Jaké základní typy právních povinností se tradičně uvádějí?
+
+Uvádí se zejména:
+
+- dát (dare)
+- jednat (facere)
+- nejednat / zdržet se (non-facere, omittere)
+- strpět (pati)
+
+## LXXVIII Právní jednání a sociální jednání
+
+### Jaký je vztah mezi právním jednáním a sociálním jednáním?
+
+Právní jednání je jednou z forem realizace práva. Každé právní i protiprávní jednání je sociálním jednáním (ovlivňuje jiné), ale ne každé sociální jednání je právním jednáním.
+
+Právní jednání vyžaduje úpravu právní normou a hledání „správného“ smyslu, nikoli jen smyslu, který mu přisuzují aktéři.
+</script>
+
+  <script>
+    "use strict";
+
+    const els = {
+      remaining: document.getElementById("remaining"),
+      correct: document.getElementById("correct"),
+      question: document.getElementById("question"),
+      answer: document.getElementById("answer"),
+      hint: document.getElementById("hint"),
+      btnCorrect: document.getElementById("btnCorrect"),
+      btnShowAnswer: document.getElementById("btnShowAnswer"),
+      btnNext: document.getElementById("btnNext"),
+      btnRestart: document.getElementById("btnRestart"),
+      sourceEditor: document.getElementById("sourceEditor"),
+      sourceMd: document.getElementById("source-md"),
+    };
+
+    function extractQAFromMarkdown(markdown) {
+      const lines = markdown.split(/\r?\n/);
+      const items = [];
+
+      let currentQuestion = null;
+      let currentAnswerLines = [];
+
+      function pushCurrent() {
+        if (!currentQuestion) return;
+        const answer = currentAnswerLines.join("\n").trim();
+        items.push({
+          question: currentQuestion,
+          answer,
+        });
+      }
+
+      for (const rawLine of lines) {
+        const line = rawLine.trimEnd();
+        if (line.startsWith("### ")) {
+          pushCurrent();
+          currentQuestion = line.slice(4).trim();
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (line.startsWith("## ") || line.startsWith("# ")) {
+          pushCurrent();
+          currentQuestion = null;
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (currentQuestion) currentAnswerLines.push(rawLine);
+      }
+
+      pushCurrent();
+
+      const unique = [];
+      const seen = new Set();
+      for (const item of items) {
+        const key = item.question.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(item);
+        }
+      }
+      return unique;
+    }
+
+    function randInt(maxExclusive) {
+      return Math.floor(Math.random() * maxExclusive);
+    }
+
+    const state = {
+      allItems: [],
+      remaining: [],
+      currentIndex: -1,
+      correct: 0,
+      lastActionWasAnswer: false,
+      answerVisible: false,
+    };
+
+    function setButtonsEnabled(enabled) {
+      els.btnCorrect.disabled = !enabled;
+      els.btnShowAnswer.disabled = !enabled;
+    }
+
+    function hideAnswer() {
+      state.answerVisible = false;
+      els.answer.classList.remove("visible");
+      els.answer.textContent = "";
+      els.btnShowAnswer.textContent = "Ukázat odpověď";
+    }
+
+    function toggleAnswer() {
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) return;
+      const item = state.remaining[state.currentIndex];
+      state.answerVisible = !state.answerVisible;
+
+      if (!state.answerVisible) {
+        hideAnswer();
+        return;
+      }
+
+      const answerText = (item.answer || "").trim();
+      els.answer.textContent = answerText.length > 0 ? answerText : "Odpověď není ve zdrojovém Markdownu uvedena.";
+      els.answer.classList.add("visible");
+      els.btnShowAnswer.textContent = "Skrýt odpověď";
+    }
+
+    function updateUI() {
+      els.remaining.textContent = String(state.remaining.length);
+      els.correct.textContent = String(state.correct);
+
+      if (state.remaining.length === 0) {
+        els.question.textContent = "Hotovo. Nezbývá žádná otázka.";
+        els.hint.textContent = "Můžeš dát Restart a začít znovu.";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) {
+        els.question.textContent = "Klikni na Další otázka.";
+        els.hint.textContent = "";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      const item = state.remaining[state.currentIndex];
+      els.question.textContent = item.question;
+      els.hint.textContent = state.lastActionWasAnswer
+        ? "Označeno. Pokračuj tlačítkem Další otázka."
+        : "Označ výsledek: Správně.";
+
+      setButtonsEnabled(!state.lastActionWasAnswer);
+      if (!state.answerVisible) hideAnswer();
+    }
+
+    function pickNextQuestion() {
+      if (state.remaining.length === 0) {
+        state.currentIndex = -1;
+        updateUI();
+        return;
+      }
+
+      state.currentIndex = randInt(state.remaining.length);
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    function markCorrect() {
+      if (state.currentIndex < 0) return;
+      state.correct += 1;
+      state.remaining.splice(state.currentIndex, 1);
+      state.currentIndex = -1;
+      state.lastActionWasAnswer = true;
+      hideAnswer();
+      updateUI();
+    }
+
+    function restart() {
+      const source = els.sourceEditor.value;
+      state.allItems = extractQAFromMarkdown(source);
+      state.remaining = [...state.allItems];
+      state.currentIndex = -1;
+      state.correct = 0;
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    els.btnNext.addEventListener("click", pickNextQuestion);
+    els.btnCorrect.addEventListener("click", markCorrect);
+    els.btnShowAnswer.addEventListener("click", toggleAnswer);
+    els.btnRestart.addEventListener("click", restart);
+
+    els.sourceEditor.value = (els.sourceMd.textContent || "").trim();
+    restart();
+  </script>
+</body>
+</html>
