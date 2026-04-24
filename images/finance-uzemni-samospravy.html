@@ -1,0 +1,517 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Testovací otázky</title>
+  <style>
+    :root {
+      --bg: #f4f7ff;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #2563eb;
+      --ok: #16a34a;
+      --bad: #dc2626;
+      --border: rgba(15, 23, 42, 0.14);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 800px at 20% 0%, rgba(37,99,235,0.16), transparent 60%),
+                  radial-gradient(1200px 800px at 100% 30%, rgba(22,163,74,0.12), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 820px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    header {
+      display: grid;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      min-height: 66px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .value.ok { color: var(--ok); }
+    .value.bad { color: var(--bad); }
+
+    .question {
+      font-size: 18px;
+      line-height: 1.35;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 14px 14px;
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      min-height: 52px;
+      touch-action: manipulation;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button:active { transform: translateY(1px); }
+
+    button.primary {
+      background: linear-gradient(180deg, rgba(37,99,235,0.18), rgba(37,99,235,0.08));
+      border-color: rgba(37,99,235,0.40);
+    }
+
+    button.ok {
+      background: linear-gradient(180deg, rgba(22,163,74,0.18), rgba(22,163,74,0.08));
+      border-color: rgba(22,163,74,0.40);
+    }
+
+    button.bad {
+      background: linear-gradient(180deg, rgba(220,38,38,0.16), rgba(220,38,38,0.07));
+      border-color: rgba(220,38,38,0.40);
+    }
+
+    button.accent {
+      background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.06));
+      border-color: rgba(37,99,235,0.30);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .row button {
+      flex: 1 1 140px;
+      min-height: 44px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      margin: 10px 0 0 0;
+    }
+
+    details {
+      margin-top: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .answer {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      background: rgba(37, 99, 235, 0.05);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: none;
+    }
+
+    .answer.visible {
+      display: block;
+    }
+
+    @media (max-width: 520px) {
+      .stats { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: 1fr; }
+      .question { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Testovací otázky</h1>
+      <div class="sub">Náhodně vybírá otázky. Označ „Správně“. Správně zodpovězené otázky se vyřadí.</div>
+    </header>
+
+    <section class="card" aria-label="Otázka">
+      <p class="question" id="question">Načítám otázky…</p>
+
+      <div class="controls">
+        <button class="ok" id="btnCorrect" type="button">Správně</button>
+      </div>
+
+      <div class="row">
+        <button class="accent" id="btnShowAnswer" type="button">Ukázat odpověď</button>
+      </div>
+
+      <div class="answer" id="answer" aria-live="polite"></div>
+
+      <div class="row">
+        <button class="primary" id="btnNext" type="button">Další otázka</button>
+        <button id="btnRestart" type="button">Restart</button>
+      </div>
+
+      <p class="muted" id="hint"></p>
+
+      <details>
+        <summary>Upravit seznam otázek (pokročilé)</summary>
+        <p class="muted">Aplikace načítá otázky z řádků začínajících <code>### </code> a odpověď bere jako text pod otázkou až do dalšího nadpisu. Můžeš sem vložit vlastní Markdown a dát Restart.</p>
+        <textarea id="sourceEditor" spellcheck="false"></textarea>
+      </details>
+    </section>
+
+    <section class="card stats" aria-label="Statistiky">
+      <div class="stat">
+        <div class="label">Zbývá</div>
+        <div class="value" id="remaining">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Správně</div>
+        <div class="value ok" id="correct">0</div>
+      </div>
+    </section>
+  </div>
+
+  <script type="text/plain" id="source-md"># Vypracované otázky
+
+## Rozpočty
+
+### Vymezte pojem rozpočet územní samosprávy
+
+Rozpočet územní samosprávy je peněžní plán, v němž se na rozpočtový rok stanovují předpokládané příjmy a výdaje obce nebo kraje. Slouží jako základní nástroj finančního hospodaření a kontroly nakládání s veřejnými prostředky.
+
+
+
+### Jaké funkce plní rozpočet územní samosprávy
+
+Rozpočet plní zejména funkci alokační (rozdělení prostředků na jednotlivé potřeby obce), redistribuční (přerozdělení prostředků mezi subjekty) a kontrolní (umožňuje kontrolu hospodaření orgány obce i veřejností).
+
+
+
+### Jaký je právní základ rozpočtového hospodaření obcí a krajů
+
+Základním právním předpisem je zákon o rozpočtových pravidlech územních rozpočtů, který upravuje tvorbu, schvalování, plnění a kontrolu rozpočtu územních samosprávných celků.
+
+
+
+### Vysvětlete zásadu ročního rozpočtu
+
+Zásada ročního rozpočtu znamená, že rozpočet se sestavuje na období jednoho rozpočtového roku, kterým je kalendářní rok. Příjmy a výdaje se plánují vždy na toto časově vymezené období.
+
+
+
+### Charakterizujte zásadu úplnosti rozpočtu
+
+Zásada úplnosti vyžaduje, aby byly v rozpočtu zachyceny veškeré plánované příjmy a výdaje územní samosprávy, bez jejich zatajování nebo vyčleňování mimo rozpočet.
+
+
+
+### Jaké jsou fáze rozpočtového procesu
+
+Rozpočtový proces zahrnuje sestavení návrhu rozpočtu, jeho projednání a schválení zastupitelstvem, plnění rozpočtu v průběhu roku a následné vypracování a schválení závěrečného účtu.
+
+
+
+### Kdo schvaluje rozpočet obce
+
+Rozpočet obce schvaluje zastupitelstvo obce, které je nejvyšším orgánem samosprávy v oblasti hospodaření s majetkem a finančními prostředky obce.
+
+
+
+### Co je rozpočtové provizorium
+
+Rozpočtové provizorium je dočasný režim hospodaření obce nebo kraje v případě, že rozpočet není schválen před začátkem rozpočtového roku. Hospodaření se pak řídí pravidly stanovenými zákonem nebo zastupitelstvem.
+
+
+
+### Vymezte pojem rozpočtové opatření
+
+Rozpočtové opatření je změna schváleného rozpočtu v průběhu rozpočtového roku, kterou se upravují rozpočtované příjmy a výdaje v reakci na změnu skutečných potřeb nebo příjmů.
+
+
+
+### Co je závěrečný účet územní samosprávy
+
+Závěrečný účet je dokument, kterým územní samospráva hodnotí své hospodaření za uplynulý rozpočtový rok. Obsahuje přehled skutečných příjmů a výdajů a slouží ke kontrole hospodaření.
+
+
+
+### Jaký význam má kontrola rozpočtového hospodaření
+
+Kontrola rozpočtového hospodaření zajišťuje zákonnost, hospodárnost a efektivnost nakládání s veřejnými prostředky. Provádí ji orgány obce, kontrolní výbory i orgány státní kontroly.
+</script>
+
+  <script>
+    "use strict";
+
+    const els = {
+      remaining: document.getElementById("remaining"),
+      correct: document.getElementById("correct"),
+      question: document.getElementById("question"),
+      answer: document.getElementById("answer"),
+      hint: document.getElementById("hint"),
+      btnCorrect: document.getElementById("btnCorrect"),
+      btnShowAnswer: document.getElementById("btnShowAnswer"),
+      btnNext: document.getElementById("btnNext"),
+      btnRestart: document.getElementById("btnRestart"),
+      sourceEditor: document.getElementById("sourceEditor"),
+      sourceMd: document.getElementById("source-md"),
+    };
+
+    function extractQAFromMarkdown(markdown) {
+      const lines = markdown.split(/\r?\n/);
+      const items = [];
+
+      let currentQuestion = null;
+      let currentAnswerLines = [];
+
+      function pushCurrent() {
+        if (!currentQuestion) return;
+        const answer = currentAnswerLines.join("\n").trim();
+        items.push({
+          question: currentQuestion,
+          answer,
+        });
+      }
+
+      for (const rawLine of lines) {
+        const line = rawLine.trimEnd();
+        if (line.startsWith("### ")) {
+          pushCurrent();
+          currentQuestion = line.slice(4).trim();
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (line.startsWith("## ") || line.startsWith("# ")) {
+          pushCurrent();
+          currentQuestion = null;
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (currentQuestion) currentAnswerLines.push(rawLine);
+      }
+
+      pushCurrent();
+
+      const unique = [];
+      const seen = new Set();
+      for (const item of items) {
+        const key = item.question.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(item);
+        }
+      }
+      return unique;
+    }
+
+    function randInt(maxExclusive) {
+      return Math.floor(Math.random() * maxExclusive);
+    }
+
+    const state = {
+      allItems: [],
+      remaining: [],
+      currentIndex: -1,
+      correct: 0,
+      lastActionWasAnswer: false,
+      answerVisible: false,
+    };
+
+    function setButtonsEnabled(enabled) {
+      els.btnCorrect.disabled = !enabled;
+      els.btnShowAnswer.disabled = !enabled;
+    }
+
+    function hideAnswer() {
+      state.answerVisible = false;
+      els.answer.classList.remove("visible");
+      els.answer.textContent = "";
+      els.btnShowAnswer.textContent = "Ukázat odpověď";
+    }
+
+    function toggleAnswer() {
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) return;
+      const item = state.remaining[state.currentIndex];
+      state.answerVisible = !state.answerVisible;
+
+      if (!state.answerVisible) {
+        hideAnswer();
+        return;
+      }
+
+      const answerText = (item.answer || "").trim();
+      els.answer.textContent = answerText.length > 0 ? answerText : "Odpověď není ve zdrojovém Markdownu uvedena.";
+      els.answer.classList.add("visible");
+      els.btnShowAnswer.textContent = "Skrýt odpověď";
+    }
+
+    function updateUI() {
+      els.remaining.textContent = String(state.remaining.length);
+      els.correct.textContent = String(state.correct);
+
+      if (state.remaining.length === 0) {
+        els.question.textContent = "Hotovo. Nezbývá žádná otázka.";
+        els.hint.textContent = "Můžeš dát Restart a začít znovu.";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) {
+        els.question.textContent = "Klikni na Další otázka.";
+        els.hint.textContent = "";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      const item = state.remaining[state.currentIndex];
+      els.question.textContent = item.question;
+      els.hint.textContent = state.lastActionWasAnswer
+        ? "Označeno. Pokračuj tlačítkem Další otázka."
+        : "Označ výsledek: Správně.";
+
+      setButtonsEnabled(!state.lastActionWasAnswer);
+      if (!state.answerVisible) hideAnswer();
+    }
+
+    function pickNextQuestion() {
+      if (state.remaining.length === 0) {
+        state.currentIndex = -1;
+        updateUI();
+        return;
+      }
+
+      state.currentIndex = randInt(state.remaining.length);
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    function markCorrect() {
+      if (state.currentIndex < 0) return;
+      state.correct += 1;
+      state.remaining.splice(state.currentIndex, 1);
+      state.currentIndex = -1;
+      state.lastActionWasAnswer = true;
+      hideAnswer();
+      updateUI();
+    }
+
+    function restart() {
+      const source = els.sourceEditor.value;
+      state.allItems = extractQAFromMarkdown(source);
+      state.remaining = [...state.allItems];
+      state.currentIndex = -1;
+      state.correct = 0;
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    els.btnNext.addEventListener("click", pickNextQuestion);
+    els.btnCorrect.addEventListener("click", markCorrect);
+    els.btnShowAnswer.addEventListener("click", toggleAnswer);
+    els.btnRestart.addEventListener("click", restart);
+
+    els.sourceEditor.value = (els.sourceMd.textContent || "").trim();
+    restart();
+  </script>
+</body>
+</html>
