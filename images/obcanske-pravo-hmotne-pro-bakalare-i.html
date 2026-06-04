@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Testovací otázky</title>
+  <style>
+    :root {
+      --bg: #f4f7ff;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #2563eb;
+      --ok: #16a34a;
+      --bad: #dc2626;
+      --border: rgba(15, 23, 42, 0.14);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 800px at 20% 0%, rgba(37,99,235,0.16), transparent 60%),
+                  radial-gradient(1200px 800px at 100% 30%, rgba(22,163,74,0.12), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 820px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    header {
+      display: grid;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      min-height: 66px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .value.ok { color: var(--ok); }
+    .value.bad { color: var(--bad); }
+
+    .question {
+      font-size: 18px;
+      line-height: 1.35;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 14px 14px;
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      min-height: 52px;
+      touch-action: manipulation;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button:active { transform: translateY(1px); }
+
+    button.primary {
+      background: linear-gradient(180deg, rgba(37,99,235,0.18), rgba(37,99,235,0.08));
+      border-color: rgba(37,99,235,0.40);
+    }
+
+    button.ok {
+      background: linear-gradient(180deg, rgba(22,163,74,0.18), rgba(22,163,74,0.08));
+      border-color: rgba(22,163,74,0.40);
+    }
+
+    button.bad {
+      background: linear-gradient(180deg, rgba(220,38,38,0.16), rgba(220,38,38,0.07));
+      border-color: rgba(220,38,38,0.40);
+    }
+
+    button.accent {
+      background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.06));
+      border-color: rgba(37,99,235,0.30);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .row button {
+      flex: 1 1 140px;
+      min-height: 44px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      margin: 10px 0 0 0;
+    }
+
+    details {
+      margin-top: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .answer {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      background: rgba(37, 99, 235, 0.05);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: none;
+    }
+
+    .answer.visible {
+      display: block;
+    }
+
+    @media (max-width: 520px) {
+      .stats { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: 1fr; }
+      .question { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Testovací otázky</h1>
+      <div class="sub">Náhodně vybírá otázky. Označ „Správně“. Správně zodpovězené otázky se vyřadí.</div>
+    </header>
+
+    <section class="card" aria-label="Otázka">
+      <p class="question" id="question">Načítám otázky…</p>
+
+      <div class="controls">
+        <button class="ok" id="btnCorrect" type="button">Správně</button>
+      </div>
+
+      <div class="row">
+        <button class="accent" id="btnShowAnswer" type="button">Ukázat odpověď</button>
+      </div>
+
+      <div class="answer" id="answer" aria-live="polite"></div>
+
+      <div class="row">
+        <button class="primary" id="btnNext" type="button">Další otázka</button>
+        <button id="btnRestart" type="button">Restart</button>
+      </div>
+
+      <p class="muted" id="hint"></p>
+
+      <details>
+        <summary>Upravit seznam otázek (pokročilé)</summary>
+        <p class="muted">Aplikace načítá otázky z řádků začínajících <code>### </code> a odpověď bere jako text pod otázkou až do dalšího nadpisu. Můžeš sem vložit vlastní Markdown a dát Restart.</p>
+        <textarea id="sourceEditor" spellcheck="false"></textarea>
+      </details>
+    </section>
+
+    <section class="card stats" aria-label="Statistiky">
+      <div class="stat">
+        <div class="label">Zbývá</div>
+        <div class="value" id="remaining">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Správně</div>
+        <div class="value ok" id="correct">0</div>
+      </div>
+    </section>
+  </div>
+
+  <script type="text/plain" id="source-md"># Vypracované otázky na soukromé právo
+
+---
+
+## Kapitola: Zásady občanského práva
+
+### Co charakterizuje svobodu jako základ soukromého práva?
+• Svoboda je preprávní hodnota  
+• Právo ji:
+– nekonstituuje  
+– respektuje  
+– chrání  
+– zároveň limituje a omezuje  
+• Tvoří podstatu fungování práva  
+
+---
+
+### Jaký je význam svobody v občanském právu?
+• Je východiskem všech částí občanského práva  
+• Vyjádřen v § 3/1 OZ („Soukromé právo chrání svobodu člověka“)  
+
+---
+
+### Jaké jsou projevy svobody v jednotlivých oblastech práva?
+• Obecná část:
+– osobnost, svéprávnost, ochrana osobnosti  
+
+• Vlastnictví:
+– majetková svoboda  
+– regulace formou omezení  
+
+• Smluvní závazky:
+– smluvní svoboda  
+– rovnost a vyváženost  
+
+• Odpovědnost:
+– autonomie  
+– zásada neminem laedere  
+
+• Dědictví:
+– autonomie vůle zůstavitele  
+– majetková kontinuita  
+
+---
+
+## Kapitola: Zásady spojené se svobodou
+
+### Jaké zásady jsou přiřazeny ke svobodě?
+• Autonomie vůle  
+• „Co není zakázáno, je dovoleno“  
+• Dispozitivnost  
+• Vigilantibus iura scripta sunt  
+
+---
+
+### Co znamená autonomie vůle?
+• Přímý odraz svobody jednotlivce  
+• Má dvě dimenze:
+– pasivní – rámec vytvořený právem  
+– aktivní – schopnost právně jednat  
+
+---
+
+### Jaké jsou projevy autonomie vůle?
+1) Volba jednat / nejednat  
+2) Volba adresáta  
+3) Volba obsahu právního jednání  
+4) Volba formy  
+5) Teoreticky volba soudce  
+
+---
+
+### Co znamená zásada „co není zakázáno, je dovoleno“?
+• Právní technika soukromého práva  
+• Vyjadřuje primát svobody  
+• Upravuje:
+– postavení osoby (od svobody)  
+– prostor neregulovaného jednání  
+
+---
+
+### Co znamená dispozitivnost?
+• Odvozena z autonomie vůle  
+• Umožňuje stranám upravit si vztahy  
+• Nástroje:
+– dispozitivní normy  
+– smlouva  
+
+---
+
+### Jaké jsou limity dispozitivnosti?
+• Zákonný zákaz  
+• Dobré mravy  
+• Veřejný pořádek  
+• Práva osob  
+
+---
+
+### Co znamená vigilantibus iura scripta sunt?
+• Práva náležejí bdělým  
+• Výzva k aktivitě jednotlivce  
+• Projev:
+– presumpce rozumových schopností (§ 4/1)  
+– presumpce znalosti (§ 4/2)  
+
+---
+
+## Kapitola: Rovnost
+
+### Jaké jsou formy rovnosti?
+• Rovnost před zákonem  
+• Rovné příležitosti  
+• Vyrovnávání nerovností:
+– zákaz diskriminace  
+– ochrana slabšího  
+
+---
+
+## Kapitola: Ekvitní zásady
+
+### Jaké zásady patří mezi ekvitní?
+• Ekvita  
+• Dobré mravy  
+• Veřejný pořádek  
+• Zákaz zneužití práva  
+• Poctivost  
+• Rozumnost  
+• Slušnost  
+• Demokratismus  
+
+---
+
+### Co je ekvita?
+• Obecný pojem spravedlivého vyvažování  
+• Původ v římském právu  
+• Funkce:
+– zmírnění tvrdosti zákona  
+
+---
+
+### Co jsou dobré mravy?
+• Neurčitý právní pojem  
+• Vyjadřuje obecné morální normy  
+• Funkce:
+– korektiv práv  
+– možnost omezit výkon práva  
+
+---
+
+### Jaké mají dobré mravy funkce v OZ?
+• Limity dispozitivnosti  
+• Limity zásahů do práv  
+• Výklad práva  
+• Součást hypotéz i sankcí  
+
+---
+
+### Co je veřejný pořádek?
+• Zajištění uspořádání veřejných vztahů  
+• Rozdíl:
+– dobré mravy → morálka  
+– veřejný pořádek → veřejný zájem  
+
+---
+
+### Co znamená zákaz zneužití práva?
+• Výkon práva nesmí škodit  
+• § 8 OZ:
+– zjevné zneužití nepožívá ochrany  
+• Formy:
+– šikana  
+– úmysl škodit  
+
+---
+
+### Jaké jsou právní důsledky zneužití práva?
+• Neposkytnutí právní ochrany  
+• Neplatnost některých právních jednání  
+• Náhrada škody  
+
+---
+
+### Co je poctivost?
+• Povinnost jednat poctivě  
+• Presumpce poctivosti (§ 7)  
+
+---
+
+### Co znamená rozumnost?
+• Standard rozumného chování  
+• Projevy:
+– presumpce rozumnosti  
+– rozumné posuzování  
+
+---
+
+### Co je slušnost?
+• Mravní zásada blízká poctivosti  
+• Doplňuje dobré mravy  
+
+---
+
+### Co znamená demokratismus?
+• Rozhodování většinou  
+• Ochrana menšiny  
+• Projevy:
+– spoluvlastnictví  
+– spolky  
+
+---
+
+## Kapitola: Právní jistota a účelnost
+
+### Co patří do právní jistoty?
+• Dobrá víra  
+• Legitimizované očekávání  
+• Zákaz retroaktivity  
+• Ochrana nabytých práv  
+• Prevence  
+
+---
+
+### Co je účelnost?
+• Důraz na praktický účel práva  
+• Nástroj:
+– teleologický výklad  
+
+---
+
+## Kapitola: Cíle soukromého práva
+
+### Jaký je cíl soukromého práva dle OZ?
+• Ochrana důstojnosti a svobody  
+• Usilování o štěstí jednotlivce  
+• Neškodit druhým  
+• Dobré uspořádání práv a povinností  
+
+---
+
+## Kapitola: Systematika občanského zákoníku
+
+### Jaká je systematika NOZ?
+• 5 částí:
+1) Obecná část  
+2) Rodinné právo  
+3) Absolutní majetková práva  
+4) Relativní majetková práva  
+5) Společná a závěrečná ustanovení  
+
+---
+
+### Jaká je struktura obecné části?
+• Předmět a zásady  
+• Osoby  
+• Zastoupení  
+• Věci  
+• Právní skutečnosti  
+
+---
+
+### Řekněte systematiku osob
+• Osoby (§15n.)
+– Fyzické osoby (§23–117)
+– Právnické osoby (§118–418)
+– Spotřebitel (§419)
+– Podnikatelé (§420–435)
+– Zastoupení (§436–488)
+
+---
+
+## Kapitola: Soukromé právo v systému práva
+
+### Jak se odlišuje soukromé a veřejné právo?
+• Kritérium:
+– metoda regulace  
+• Soukromé:
+– rovnost subjektů  
+– smlouvy  
+• Veřejné:
+– podřízenost  
+– autoritativní rozhodnutí  
+
+---
+
+### Jaké jsou teorie odlišení?
+• Zájmová  
+• Mocenská  
+• Organická  
+• Metoda regulace  
+
+---
+
+## Kapitola: Věci
+
+### Co je věc v právním smyslu?
+• Vše:
+– co není osoba  
+– slouží potřebám lidí  
+
+---
+
+### Jaké jsou druhy věcí?
+• Hmotné / nehmotné  
+• Movité / nemovité  
+• Zastupitelné / nezastupitelné  
+• Zuživatelné / nezuživatelné  
+
+---
+
+### Co je součást věci?
+• Nelze ji oddělit bez znehodnocení věci  
+
+---
+
+### Co je příslušenství věci?
+• Vedlejší věc sloužící k užívání věci hlavní  
+
+---
+
+### Co je věc nemovitá?
+• Pozemek  
+• Stavba  
+• Podzemní stavba  
+• Jednotka  
+• Práva k nemovitostem  
+
+---
+
+### Co je plod a užitek?
+• Plod:
+– přirozený výnos věci  
+
+• Užitky:
+– právní výnos (např. nájem)  
+
+---
+
+### Co je majetek a jmění?
+• Majetek = aktiva  
+• Jmění = aktiva + pasiva  
+
+---
+
+### Co je právo stavby?
+• Nemovitá nehmotná věc  
+• Umožňuje mít stavbu na cizím pozemku  
+• Trvá max. 99 let  
+• Lze převést i zdědit  
+
+---
+
+## Kapitola: Právní skutečnosti
+
+### Co jsou právní skutečnosti?
+• Okolnosti způsobující:
+– vznik  
+– změnu  
+– zánik práv  
+
+---
+
+### Jaké jsou druhy právních skutečností?
+• Právní jednání  
+• Protiprávní jednání  
+• Události  
+• Stavy  
+
+---
+
+### Co je právní jednání?
+• Projev vůle směřující ke vzniku právních následků  
+
+---
+
+### Jaké jsou náležitosti právního jednání?
+• Subjekt  
+• Vůle  
+• Projev vůle  
+• Shoda  
+• Předmět  
+
+---
+
+### Jaké jsou následky právního jednání?
+• Vznik  
+• Platnost  
+• Účinnost  
+• Vznik závazku  
+• Zánik závazku  
+
+---
+
+### Jaké jsou vady právního jednání?
+• Zdánlivost  
+• Neplatnost:
+– absolutní  
+– relativní  
+• Neúčinnost  
+
+---
+
+### Co je zdánlivé právní jednání?
+• Neexistuje  
+• Nepřihlíží se k němu  
+
+---
+
+### Co je neplatnost?
+• Absolutní – soud přihlíží sám  
+• Relativní – musí se namítnout  
+
+---
+
+### Co je relativní neúčinnost?
+• Zkracuje věřitele  
+• Lze odporovat žalobou  
+
+---
+
+### Jaké jsou náležitosti vůle?
+• Skutečná  
+• Svobodná  
+• Vážná  
+• Bez omylu  
+
+---
+
+### Co je omyl?
+• Nesoulad mezi vůlí a realitou  
+• Důsledek:
+– relativní neplatnost  
+
+---
+
+### Co musí splňovat projev vůle?
+• Určitost  
+• Srozumitelnost  
+
+---
+
+### Jaké jsou formy právního jednání?
+• Bezformální  
+• Písemná  
+• Elektronická  
+
+---
+
+### Co je oferta a akceptace?
+• Nabídka a přijetí vedoucí ke smlouvě  
+
+---
+
+### Co jsou podmínky právního jednání?
+• Odkládací  
+• Rozvazovací  
+
+---
+
+### Co je promlčení?
+• Uplynutí lhůty → oslabení práva  
+• Lhůty:
+– subjektivní: 3 roky  
+– objektivní: 10 let  
+
+---
+</script>
+
+  <script>
+    "use strict";
+
+    const els = {
+      remaining: document.getElementById("remaining"),
+      correct: document.getElementById("correct"),
+      question: document.getElementById("question"),
+      answer: document.getElementById("answer"),
+      hint: document.getElementById("hint"),
+      btnCorrect: document.getElementById("btnCorrect"),
+      btnShowAnswer: document.getElementById("btnShowAnswer"),
+      btnNext: document.getElementById("btnNext"),
+      btnRestart: document.getElementById("btnRestart"),
+      sourceEditor: document.getElementById("sourceEditor"),
+      sourceMd: document.getElementById("source-md"),
+    };
+
+    function extractQAFromMarkdown(markdown) {
+      const lines = markdown.split(/\r?\n/);
+      const items = [];
+
+      let currentQuestion = null;
+      let currentAnswerLines = [];
+
+      function pushCurrent() {
+        if (!currentQuestion) return;
+        const answer = currentAnswerLines.join("\n").trim();
+        items.push({
+          question: currentQuestion,
+          answer,
+        });
+      }
+
+      for (const rawLine of lines) {
+        const line = rawLine.trimEnd();
+        if (line.startsWith("### ")) {
+          pushCurrent();
+          currentQuestion = line.slice(4).trim();
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (line.startsWith("## ") || line.startsWith("# ")) {
+          pushCurrent();
+          currentQuestion = null;
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (currentQuestion) currentAnswerLines.push(rawLine);
+      }
+
+      pushCurrent();
+
+      const unique = [];
+      const seen = new Set();
+      for (const item of items) {
+        const key = item.question.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(item);
+        }
+      }
+      return unique;
+    }
+
+    function randInt(maxExclusive) {
+      return Math.floor(Math.random() * maxExclusive);
+    }
+
+    const state = {
+      allItems: [],
+      remaining: [],
+      currentIndex: -1,
+      correct: 0,
+      lastActionWasAnswer: false,
+      answerVisible: false,
+    };
+
+    function setButtonsEnabled(enabled) {
+      els.btnCorrect.disabled = !enabled;
+      els.btnShowAnswer.disabled = !enabled;
+    }
+
+    function hideAnswer() {
+      state.answerVisible = false;
+      els.answer.classList.remove("visible");
+      els.answer.textContent = "";
+      els.btnShowAnswer.textContent = "Ukázat odpověď";
+    }
+
+    function toggleAnswer() {
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) return;
+      const item = state.remaining[state.currentIndex];
+      state.answerVisible = !state.answerVisible;
+
+      if (!state.answerVisible) {
+        hideAnswer();
+        return;
+      }
+
+      const answerText = (item.answer || "").trim();
+      els.answer.textContent = answerText.length > 0 ? answerText : "Odpověď není ve zdrojovém Markdownu uvedena.";
+      els.answer.classList.add("visible");
+      els.btnShowAnswer.textContent = "Skrýt odpověď";
+    }
+
+    function updateUI() {
+      els.remaining.textContent = String(state.remaining.length);
+      els.correct.textContent = String(state.correct);
+
+      if (state.remaining.length === 0) {
+        els.question.textContent = "Hotovo. Nezbývá žádná otázka.";
+        els.hint.textContent = "Můžeš dát Restart a začít znovu.";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) {
+        els.question.textContent = "Klikni na Další otázka.";
+        els.hint.textContent = "";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      const item = state.remaining[state.currentIndex];
+      els.question.textContent = item.question;
+      els.hint.textContent = state.lastActionWasAnswer
+        ? "Označeno. Pokračuj tlačítkem Další otázka."
+        : "Označ výsledek: Správně.";
+
+      setButtonsEnabled(!state.lastActionWasAnswer);
+      if (!state.answerVisible) hideAnswer();
+    }
+
+    function pickNextQuestion() {
+      if (state.remaining.length === 0) {
+        state.currentIndex = -1;
+        updateUI();
+        return;
+      }
+
+      state.currentIndex = randInt(state.remaining.length);
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    function markCorrect() {
+      if (state.currentIndex < 0) return;
+      state.correct += 1;
+      state.remaining.splice(state.currentIndex, 1);
+      state.currentIndex = -1;
+      state.lastActionWasAnswer = true;
+      hideAnswer();
+      updateUI();
+    }
+
+    function restart() {
+      const source = els.sourceEditor.value;
+      state.allItems = extractQAFromMarkdown(source);
+      state.remaining = [...state.allItems];
+      state.currentIndex = -1;
+      state.correct = 0;
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    els.btnNext.addEventListener("click", pickNextQuestion);
+    els.btnCorrect.addEventListener("click", markCorrect);
+    els.btnShowAnswer.addEventListener("click", toggleAnswer);
+    els.btnRestart.addEventListener("click", restart);
+
+    els.sourceEditor.value = (els.sourceMd.textContent || "").trim();
+    restart();
+  </script>
+</body>
+</html>
