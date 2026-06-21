@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Testovací otázky</title>
+  <style>
+    :root {
+      --bg: #f4f7ff;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #475569;
+      --accent: #2563eb;
+      --ok: #16a34a;
+      --bad: #dc2626;
+      --border: rgba(15, 23, 42, 0.14);
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Liberation Sans", sans-serif;
+      background: radial-gradient(1200px 800px at 20% 0%, rgba(37,99,235,0.16), transparent 60%),
+                  radial-gradient(1200px 800px at 100% 30%, rgba(22,163,74,0.12), transparent 55%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      padding: 16px;
+    }
+
+    .app {
+      max-width: 820px;
+      margin: 0 auto;
+      display: grid;
+      gap: 14px;
+    }
+
+    header {
+      display: grid;
+      gap: 8px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: 0.2px;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 16px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .stat {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      min-height: 66px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+    }
+
+    .stat .label {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .stat .value {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .value.ok { color: var(--ok); }
+    .value.bad { color: var(--bad); }
+
+    .question {
+      font-size: 18px;
+      line-height: 1.35;
+      margin: 0;
+      word-break: break-word;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 14px 14px;
+      font-size: 16px;
+      font-weight: 650;
+      letter-spacing: 0.2px;
+      cursor: pointer;
+      min-height: 52px;
+      touch-action: manipulation;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    button:active { transform: translateY(1px); }
+
+    button.primary {
+      background: linear-gradient(180deg, rgba(37,99,235,0.18), rgba(37,99,235,0.08));
+      border-color: rgba(37,99,235,0.40);
+    }
+
+    button.ok {
+      background: linear-gradient(180deg, rgba(22,163,74,0.18), rgba(22,163,74,0.08));
+      border-color: rgba(22,163,74,0.40);
+    }
+
+    button.bad {
+      background: linear-gradient(180deg, rgba(220,38,38,0.16), rgba(220,38,38,0.07));
+      border-color: rgba(220,38,38,0.40);
+    }
+
+    button.accent {
+      background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.06));
+      border-color: rgba(37,99,235,0.30);
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .row button {
+      flex: 1 1 140px;
+      min-height: 44px;
+      padding: 10px 12px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.35;
+      margin: 10px 0 0 0;
+    }
+
+    details {
+      margin-top: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.03);
+      color: var(--text);
+      padding: 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .answer {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px dashed var(--border);
+      background: rgba(37, 99, 235, 0.05);
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-word;
+      display: none;
+    }
+
+    .answer.visible {
+      display: block;
+    }
+
+    @media (max-width: 520px) {
+      .stats { grid-template-columns: 1fr; }
+      .controls { grid-template-columns: 1fr; }
+      .question { font-size: 17px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Testovací otázky</h1>
+      <div class="sub">Náhodně vybírá otázky. Označ „Správně“. Správně zodpovězené otázky se vyřadí.</div>
+    </header>
+
+    <section class="card" aria-label="Otázka">
+      <p class="question" id="question">Načítám otázky…</p>
+
+      <div class="controls">
+        <button class="ok" id="btnCorrect" type="button">Správně</button>
+      </div>
+
+      <div class="row">
+        <button class="accent" id="btnShowAnswer" type="button">Ukázat odpověď</button>
+      </div>
+
+      <div class="answer" id="answer" aria-live="polite"></div>
+
+      <div class="row">
+        <button class="primary" id="btnNext" type="button">Další otázka</button>
+        <button id="btnRestart" type="button">Restart</button>
+      </div>
+
+      <p class="muted" id="hint"></p>
+
+      <details>
+        <summary>Upravit seznam otázek (pokročilé)</summary>
+        <p class="muted">Aplikace načítá otázky z řádků začínajících <code>### </code> a odpověď bere jako text pod otázkou až do dalšího nadpisu. Můžeš sem vložit vlastní Markdown a dát Restart.</p>
+        <textarea id="sourceEditor" spellcheck="false"></textarea>
+      </details>
+    </section>
+
+    <section class="card stats" aria-label="Statistiky">
+      <div class="stat">
+        <div class="label">Zbývá</div>
+        <div class="value" id="remaining">0</div>
+      </div>
+      <div class="stat">
+        <div class="label">Správně</div>
+        <div class="value ok" id="correct">0</div>
+      </div>
+    </section>
+  </div>
+
+  <script type="text/plain" id="source-md"># zaklady-spravniho-prava.html
+
+## OKRUH A) Organizace a základy správního práva
+
+### 1. Správní právo, pojem a charakteristika, vnitřní členění, odvětvotvorná kritéria
+
+* 
+**Pojem a charakteristika**: Správní právo představuje „právní řád veřejné správy“, neboli soubor právních norem, které regulují veřejnou správu. Je to klasické **veřejnoprávní odvětví**, pro které je charakteristická administrativněprávní metoda regulace: nerovnost subjektů (správní orgán vystupuje vůči adresátovi v nadřazeném postavení), jednostrannost (rozhodování z moci úřední) a možnost uplatnění veřejnoprávního donucení. Správní právo je **nekodifikované** a vyznačuje se značnou roztříštěností do velkého množství dílčích zákonů. Upravuje limity výkonu veřejné moci (princip výhrady zákona) a zároveň poskytuje ochranu subjektivních práv jednotlivců.
+
+
+* **Vnitřní členění**:
+* 
+*Podle obsahu*: organizační (úprava struktury, např. kompetenční zákon), hmotné (práva a povinnosti adresátů, např. stavební zákon), procesní (postupy, např. správní řád) a trestní (odpovědnost za delikty, např. zákon o přestupcích).
+
+
+* 
+*Z pedagogického pohledu*: Obecná část (základní pojmy, principy a instituty) a Zvláštní část (úprava jednotlivých věcných úseků, např. doprava, školství).
+
+
+
+
+* 
+**Odvětvotvorná kritéria**: Mezi klíčová kritéria řadící správní právo do veřejného práva patří samostatný **předmět regulace** (veřejná správa), specifická **metoda právního regulace** (administrativněprávní metoda založená na nerovnosti a vrchnostenském diktátu) a **společenský zájem** (ochrana veřejného zájmu).
+
+
+
+### 2. Veřejná správa, pojem a charakteristika, vnitřní členění
+
+* 
+**Pojem**: V nejjednodušším pojetí (tzv. negativní vymezení) je veřejná správa chápána jako moc výkonná, resp. to, co zbývá v činnosti státu po „odečtení“ moci zákonodárné a soudní. V pozitivním smyslu se jedná o záměrnou činnost směřující k realizaci veřejných cílů a úkolů ve veřejném zájmu.
+
+
+* 
+**Charakteristika**: Veřejná správa je podzákonná (vázaná právem, secundum et intra legem), výkonná (uskutečňuje vůli zákonodárce) a nařizovací (disponuje mocenskými prostředky). Je vykonávána veřejnými subjekty, využívá veřejnoprávní prostředky a je realizována jako právní povinnost (často z moci úřední). Na rozdíl od soukromé správy (která sleduje soukromý zájem a funguje na principu autonomie vůle) je veřejná správa striktně vázána mantinely zákona.
+
+
+* **Vnitřní členění**:
+* 
+*Podle organizačního nositele*: Státní správa (vykonávaná státem) a Samospráva (vykonávaná jinými veřejnoprávními korporacemi).
+
+
+* 
+*Podle formy působení*: Vrchnostenská (autoritativní výkon veřejné moci, vertikální vztahy) a Nevrchnostenská (fiskální správa majetku a pečovatelská správa poskytující veřejné služby).
+
+
+* 
+*Podle pohledu na systém*: Statické pojetí (organizace a struktura) a Dynamické pojetí (činnost a procesy).
+
+
+
+
+
+### 3. Státní správa a její charakteristické rysy. Samospráva a její charakteristické rysy
+
+* 
+**Státní správa**: Je to činnost státu realizovaná prostřednictvím jeho správních orgánů. Její výkon se děje jménem státu, v jeho zájmu a na jeho odpovědnost.
+
+
+* 
+*Charakteristické rysy*: Centralizace, hierarchické uspořádání (vztahy podřízenosti a nadřízenosti uvnitř systému), profesionalita (úřednický aparát) a univerzální celostátní dosah.
+
+
+* Dělí se na *přímou* (vykonávanou přímo orgány státu, jako jsou ministerstva či dekoncentrované úřady) a *nepřímou* (stát přenese výkon na jiné subjekty, typicky na orgány obcí a krajů v přenesené působnosti).
+
+
+
+
+* 
+**Samospráva**: Představuje výkon veřejné správy jinými veřejnoprávními korporacemi odlišnými od státu, které jsou zřízeny zákonem. Tyto korporace vykonávají správu svým vlastním jménem, na vlastní odpovědnost a ve vlastním zájmu (resp. v zájmu svých členů).
+
+
+* 
+*Charakteristické rysy*: Autonomie vůči státu (stát do ní může zasahovat pouze na základě a v mezích zákona formou dozoru), členský základ (společenství osob, např. občané obce) a decentralizace veřejné moci.
+
+
+* Člení se na *územní* (obce, kraje), *profesní* (komory s povinným členstvím, např. ČAK, ČLK) a *zájmovou/vědeckou* (např. veřejné vysoké školy).
+
+
+
+
+
+### 4. Prameny a normy správního práva, jejich charakteristika a členění, publikace. Základy interpretace správního práva a základní charakteristika správního uvážení
+
+* **Prameny správního práva**:
+* 
+*Materiální prameny*: Společenská realita, historický kontext a poptávka po právní regulaci.
+
+
+* 
+*Formální prameny*: Právní předpisy zákonné (Ústava, ústavní zákony, zákony) a podzákonné (nařízení vlády, vyhlášky ministerstev, obecně závazné vyhlášky a nařízení obcí a krajů). Dále sem patří normativní smlouvy (včetně mezinárodních) a evropské právo (primární i sekundární – nařízení, směrnice) z důvodu europeizace. Judikatura má povahu přímého pramene pouze u rušivých nálezů Ústavního soudu (negativní zákonodárce), ostatní judikatura (např. NSS) je závazná jen nepřímo skrze přesvědčivost a aplikaci práva v konkrétní věci.
+
+
+
+
+* 
+**Normy správního práva**: Obecně závazná, státem či samosprávou vytvořená a vynutitelná pravidla chování. Člení se na hmotněprávní, procesní, organizační a trestní.
+
+
+* **Publikace pramenů**: Podmínkou platnosti je řádné vyhlášení v oficiálních sbírkách (např. Sbírka zákonů a mezinárodních smluv, Sbírka právních předpisů územních samosprávných celků a některých správních úřadů).
+* 
+**Interpretace a správní uvážení (diskrece)**: Interpretace správního práva vychází z principů právního státu a ochrany základních práv. Specifikem je aplikace **neurčitých právních pojmů** (např. „veřejný zájem“, „veřejný pořádek“), které musí orgán nejprve interpretovat (zde neexistuje volba, buď situace pod pojem spadá, nebo ne). Naproti tomu **správní uvážení** nastává tam, kde zákon dává správnímu orgánu možnost volby mezi několika právně stejně možnými řešeními (např. „orgán může uložit pokutu až do výše...“). Limitem správního uvážení jsou ústavní principy, zákaz libovůle a smysl zákona.
+
+
+
+### 5. Organizace veřejné správy, její charakteristika a ústavní základy. Organizační principy veřejné správy a jejich uplatnění ve veřejné správě v ČR
+
+* 
+**Charakteristika organizace a ústavní základy**: Organizace v sobě nese institucionální vyjádření systému veřejné správy. Ústavní základy jsou zakotveny v Ústavě ČR – čl. 2 odst. 3 (legitimita a meze státní moci), Hlava třetí (Moc výkonná – prezident, vláda, ministerstva) a Hlava sedmá (Územní samospráva – obce a kraje). Významná je též Listina základních práv a svobod (čl. 2 odst. 2).
+
+
+* **Organizační principy veřejné správy a jejich uplatnění v ČR**:
+* 
+*Centralizace vs. Decentralizace*: Centralizovaná je čistá státní správa (řízení z centra, ministerstva) ; decentralizace se projevuje v existenci samosprávných celků (obce, kraje), na které je přenesena část veřejné moci a stát jim do ní nemůže svévolně zasahovat.
+
+
+* 
+*Koncentrace vs. Dekoncentrace*: Dekoncentrace znamená rozprostření výkonu státní správy do území prostřednictvím specializovaných dekoncentrovaných orgánů (např. finanční úřady, krajské hygienické stanice).
+
+
+* 
+*Územní vs. Rezortní*: Rezortní princip dělí správu podle věcných odvětví (ministerstva); územní princip organizuje správu podle geografických celků (územní samosprávné celky).
+
+
+* 
+*Monokratický vs. Kolegiální*: Monokratické jsou úřady, kde rozhoduje jediná osoba (ministr, ředitel úřadu) ; kolegiální orgány rozhodují ve sboru (vláda, zastupitelstvo obce/kraje, rada).
+
+
+* 
+*Volební vs. Jmenovací*: Volební princip dominuje v samosprávě (zastupitelstva); jmenovací v profesionální státní správě (státní úředníci, ministři).
+
+
+
+
+
+### 6. Subjekty a vykonavatelé veřejné správy. Základní charakteristika správněprávních vztahů
+
+* 
+**Subjekty veřejné správy**: Jde o nositele veřejné správy, tedy právní subjekty (PO veřejného práva), kterým zákon ukládá výkon správy a nesou za něj právní odpovědnost. Patří sem **stát** (originární subjekt), **veřejnoprávní korporace** (obce, kraje, komory), **veřejné ústavy** (příspěvkové organizace poskytující služby), **veřejné podniky** (např. státní podniky jako Česká pošta) a **veřejné fondy** (např. SFŽP). Za určitých podmínek jimi mohou být i soukromé PO či FO, pokud na ně byl přenesen výkon veřejné moci (např. lesní stráž).
+
+
+* 
+**Vykonavatelé veřejné správy**: Jsou to konkrétní orgány či útvary, které zajišťují faktický výkon správy „pro“ daného nositele (subjekt). Vykonavatelé zpravidla nemají vlastní právní subjektivitu (nemají vlastní majetek pro náhradu škody). Příklad: Nositelem je stát, vykonavatelem je Ministerstvo dopravy; nositelem je obec, vykonavatelem je obecní úřad. Vykonavatel disponuje zákonem svěřenou **pravomocí** (mocenské nástroje, např. vydávat akty) a **působností** (věcné a územní vymezení témat, která řeší).
+
+
+* 
+**Správněprávní vztahy**: Jsou to mocenské (vrchnostenské) právní vztahy vznikající při výkonu veřejné správy. Charakterizuje je administrativněprávní metoda (jednostrannost, nerovnost stran, přímá vynutitelnost). Jedním ze subjektů je vždy orgán veřejné správy. Prvky vztahu jsou: *subjekty* (správní orgán a adresát), *obsah* (veřejná subjektivní práva a povinnosti) a *objekt* (chráněná hodnota či zájem). Člení se na vnější (vztah úřadu navenek k občanovi) a vnitřní (vnitroorganizační, např. metodické pokyny ministerstva vůči podřízenému úřadu).
+
+
+
+### 7. Orgány státní správy (ústřední orgány státní správy, neústřední orgány s celostátní působností, územně dekoncentrované orgány)
+
+* 
+**Ústřední orgány státní správy**: Jsou zřizovány výhradně zákonem (v ČR zákon č. 2/1969 Sb., kompetenční zákon). Působí na vrcholu hierarchie přímého výkonu státní správy, jejich územní působnost je celostátní a věcná působnost je specializovaná na konkrétní rezort. V jejich čele stojí člen vlády (monokratický princip). Patří sem všechna **ministerstva** (např. Ministerstvo vnitra, Ministerstvo financí).
+
+
+* **Neústřední orgány s celostátní působností**: Jsou podřízeny vládě nebo ministerstvům, mají celostátní územní působnost, ale nejsou politicky zastoupeny přímo ve vládě. Často jde o vysoce specializované úřady (např. Český úřad zeměměřický a katastrální, Český statistický úřad) nebo specifické nezávislé regulační orgány (např. Energetický regulační úřad).
+
+
+* 
+**Územně dekoncentrované orgány**: Jedná se o specializované orgány státní správy, které působí v jednotlivých územních jednotkách státu. Jsou přímo organizačně odvozeny a podřízeny ústředním orgánům (ministerstvům). Zřizují se z důvodu úzké specializace, kterou by nebylo efektivní vykonávat všeobecnými orgány samospráv (obcí a krajů). Jejich územní obvody se nemusí striktně krýt s běžným územním členěním. Příklady: finanční úřady, krajské hygienické stanice, inspektoráty ČOI, úřady práce.
+
+
+
+### 8. Územní, profesní a zájmová samospráva – charakteristika, principy fungování. Obce a kraje a jejich právní postavení
+
+* 
+**Územní samospráva (Obce a kraje)**: Je založena na územním principu, kde základem je společenství občanů žijících na daném území (ÚSC). Obce (základní ÚSC) a kraje (vyšší ÚSC) jsou veřejnoprávní korporace s právní subjektivitou a vlastním majetkem.
+
+
+* 
+*Právní postavení a fungování*: Vykonávají dvojí působnost (smíšený model): **samostatnou působnost** (samospráva – spravování vlastních záležitostí jménem korporace, např. rozpočet, rozvoj území) a **přenesenou působnost** (státní správa – výkon delegované státní moci jménem státu, např. vydávání stavebních povolení, matrika). Vztah mezi obcí a krajem v samostatné působnosti není hierarchický – kraj není nadřízeným obci, platí princip subsidiarity a respektování autonomie. Orgány jsou zastupitelstvo (kolegiální, rozhodující), rada, starosta/hejtman a obecní/krajský úřad.
+
+
+
+
+* 
+**Profesní samospráva (Komory)**: Sdružuje osoby vykonávající určitá svobodná povolání. Je charakteristická **povinným členstvím**, které je podmínkou pro výkon dané profese. Disponuje právem vydávat interní stavovské předpisy (které mají pro členy povahu pramenů práva) a uplatňovat disciplinární odpovědnost a tresty. Příklady: Česká advokátní komora, Komora lékařů, Komora architektů. Sleduje kvalitu výkonu a profesní etiku.
+
+
+* 
+**Zájmová a vědecká samospráva**: Příkladem jsou veřejné vysoké školy. Mají zákonem garantovanou akademickou samosprávu (volba rektora, akademického senátu, schvalování vnitřních předpisů), přičemž stát (ministerstvo) vykonává pouze omezený zákonný dozor.
+
+
+
+### 9. Dozor nad výkonem působnosti obcí a krajů. Vzájemné vztahy obcí a krajů
+
+* 
+**Dozor nad výkonem působnosti ÚSC**: Stát je oprávněn a povinen kontrolovat a dozorovat výkon veřejné správy, avšak intenzita se zásadně liší podle druhu působnosti:
+
+
+* *Dozor v samostatné působnosti (samospráva)*: Je zaměřen **výhradně na kritérium zákonnosti** (stát nemůže hodnotit účelnost či politickou vhodnost rozhodnutí samosprávy). Pokud obecně závazná vyhláška obce odporuje zákonu, Ministerstvo vnitra pozastaví její účinnost a podá návrh Ústavnímu soudu na její zrušení.
+* *Dozor v přenesené působnosti (státní správa)*: Zde stát (prostřednictvím krajských úřadů vůči obcím, a ministerstev vůči krajům) hodnotí **jak zákonnost, tak i účelnost a správnost** rozhodování, protože jde o výkon státní správy. Vyšší orgán může nezákonné či nesprávné rozhodnutí v rámci odvolacího nebo přezkumného řízení přímo změnit či zrušit.
+
+
+* 
+**Vzájemné vztahy obcí a krajů**: V oblasti samosprávy (samostatné působnosti) jsou si obce a kraje právně naroveň. Kraj nemůže úkolovat obec, jak má nakládat se svým majetkem nebo rozpočtem. V přenesené působnosti však krajský úřad vystupuje jako nadřízený správní orgán vůči obecním úřadům (rozhoduje o odvoláních proti rozhodnutím obecních úřadů, provádí metodické vedení a kontrolu výkonu státní správy).
+
+## OKRUH B) Činnost a záruky ve veřejné správě
+
+### 1. Činnost veřejné správy, její charakteristika, ústavní základy, podklad a formy
+
+* 
+**Charakteristika činnosti**: Představuje dynamické pojetí veřejné správy (vnější i vnitřní projevy a procesy). Je determinována úkoly, které před veřejnou správu staví zákonodárce. Má primárně aplikační a realizační povahu.
+
+
+* **Ústavní základy a podklad**: Činnost musí striktně respektovat čl. 2 odst. 3 Ústavy ČR a čl. 2 odst. 2 LZPS (princip legality – státní moc lze uplatňovat jen v případech, mezích a způsoby, které stanoví zákon). Podkladem pro jakoukoli činnost musí být existence kompetence a zákonného zmocnění. V nevrchnostenské činnosti se uplatňuje též čl. 2 odst. 4 Ústavy (legální licence pro občany) s vědomím, že veřejný subjekt je vždy vázán svým veřejným účelem.
+
+
+* 
+**Formy činnosti**: Jde o konkrétní právní či faktické typy jednání, kterými správní orgány plní své úkoly. Dělí se na:
+
+
+1. *Právní formy*:
+* Výkon veřejné moci (vrchnostenské): Normativní správní akty (vyhlášky, nařízení) , Individuální správní akty (rozhodnutí ve správním řízení), Veřejnoprávní smlouvy, Opatření obecné povahy.
+
+
+* Soukromoprávní formy (nevrchnostenské): Obchodní smlouvy, zakázky, správa majetku.
+
+
+
+
+2. 
+*Faktické formy (faktické úkony)*: Faktické pokyny (např. pokyn policisty na křižovatce), bezprostřední zásahy (např. odtah vozidla), exekuční úkony.
+
+
+
+
+
+### 2. Normativní správní akty, právní předpisy obcí a krajů
+
+* 
+**Normativní správní akty**: Jsou výsledkem podzákonné normotvorné činnosti veřejné správy. Obsahují obecně závazná pravidla chování (právní normy) určená druhově vymezeným adresátům na druhově vymezené případy. Patří sem nařízení vlády a vyhlášky ministerstev (vydávané k provedení zákona, secundum et intra legem).
+
+
+* **Právní předpisy obcí a krajů**: Územní samosprávné celky mají ústavně zaručené právo vydávat dva typy předpisů:
+1. **Obecně závazné vyhlášky (samostatná působnost)**: Jsou projevem ústavního práva na samosprávu (čl. 104 odst. 3 Ústavy). K jejich vydání obec/kraj **nepotřebuje explicitní zákonné zmocnění** (postačuje obecný ústavní základ), musí se však pohybovat v mezích věcí samosprávných a neodporovat zákonu.
+2. **Nařízení obcí a krajů (přenesená působnost)**: Jde o podzákonné prováděcí předpisy k výkonu státní správy. K jejich vydání územní celek **musí mít výslovné zákonné zmocnění** v konkrétním zákoně (např. nařízení obce o placeném parkování na základě zákona o pozemních komunikacích).
+
+
+
+### 3. Správní akty jiné než normativní (Individuální správní akty)
+
+* 
+**Charakteristika**: Na rozdíl od normativních aktů jsou správní akty jiné než normativní (individuální správní akty – ISA) jednostranné výsledky rozhodovací pravomoci správních orgánů, které řeší **konkrétní věc** (vymezenou skutkově) a směřují vůči **konkrétním (jmenovitě určeným) adresátům**.
+
+
+* **Vlastnosti a dělení ISA**:
+* 
+*Vlastnosti*: Jsou vydávány na základě autoritativního postavení správního orgánu (administrativněprávní metoda). Jsou právně závazné a v případě nesplnění povinnosti přímo exučně vynutitelné státní mocí.
+
+
+* *Konstitutivní akty*: Zakládají, mění nebo ruší správněprávní vztahy (mění právní status adresáta ex nunc – od nynějška). Příklady: stavební povolení, řidičské oprávnění, rozhodnutí o uložení pokuty za přestupek.
+
+
+* *Deklaratorní akty*: Nově nezakládají práva ani povinnosti, pouze autoritativně potvrzují (deklarují) existenci či neexistenci určitého právního vztahu či práva, které již existovalo (působí ex tunc – odedávna). Příklad: rozhodnutí o určení, zda někdo je/není občanem, rozhodnutí o trvání agrárního práva.
+
+
+
+### 4. Jiné formy činnosti veřejné správy (než správní akty) – charakteristika, druhy, odlišení od správních aktů
+
+* **Charakteristika**: Jde o formy činnosti, které nesplňují znaky formálního vrchnostenského rozhodování (ISA) ani obecné normotvorby. Často jde o materiální operace, faktické úkony nebo specifické smíšené instituty.
+
+
+* **Druhy**:
+1. 
+*Faktické pokyny*: Bezprostřední výzvy k určitému chování (např. výzva policisty „Jménem zákona zastavte!“).
+
+
+2. *Bezprostřední zásahy*: Přímé fyzické jednání k odvrácení bezprostředně hrozícího nebezpečí (např. použití donucovacích prostředků policií, uhašení požáru hasiči, odtah silniční překážky).
+3. *Opatření obecné povahy (OOP)*: Specifický institut stojící na pomezí normativního a individuálního aktu. Má **konkrétní předmět** (jako ISA), ale **anonymní, druhově určený okruh adresátů** (jako normativní akt). Příklad: vydání územního plánu, stanovení přechodné úpravy provozu dopravními značkami na konkrétní ulici.
+4. *Veřejnoprávní smlouvy*: Dvou- či víceúčelové právní úkony zakládající koordinaci mezi správními orgány nebo nahrazující individuální akty se souhlasem adresáta (metoda rovnosti aplikovaná ve veřejném právu).
+
+
+* 
+**Odlišení od správních aktů**: Správní akty (normativní i individuální) jsou formální, písemné procesní výsledky (vyžadují formalizované řízení podle správního řádu). Faktické úkony se provádějí bez předchozího řízení, na místě, často ústně nebo reálným činem, a slouží k operativnímu řešení krizových situací.
+
+
+
+### 5. Správní právo trestní. Správněprávní odpovědnost a odpovědnost za porušení norem správního práva. Druhy správních deliktů
+
+* 
+**Správní právo trestní a odpovědnost**: Jde o specifický subsystém správního práva upravující odpovědnost za protiprávní jednání, které nedosahuje intenzity soudně trestaného trestného činu. Správněprávní odpovědnost je odvětvovou odpovědností, kterou uplatňují **správní orgány**, nikoli soudy. Vychází ze sankční koncepce – vzniká jako nová povinnost (snášet sankci) v důsledku porušení primární právní normy. Vyžaduje existenci deliktní způsobilosti adresáta.
+
+
+* **Druhy správních deliktů**:
+1. 
+**Přestupky**: Hlavní a nejčastější kategorie (upravená zejména zákonem č. 250/2016 Sb.). Přestupkem je protiprávní čin, který je v zákoně výslovně označen a vykazuje zákonné znaky. V ČR došlo k integraci dřívějších „jiných správních deliktů“ pod pojem přestupek. Přestupky mohou spáchat:
+
+
+* *Fyzické osoby*: Zpravidla se vyžaduje zavinění (alespoň z nedbalosti).
+* *Právnické osoby a podnikající FO*: Odpovědnost je konstruována jako **objektivní** (za výsledek, bez ohledu na zavinění), s možností takzvaného liberačního důvodu (zproštění se odpovědnosti, pokud osoba prokáže, že vynaložila veškeré úsilí, které bylo možno požadovat, aby porušení zabránila).
+
+
+2. 
+*Disciplinární delikty*: Porušení služební, profesní nebo stavovské disciplíny v rámci vnitřních vztahů (např. delikty státních úředníků v režimu státní služby, kárná provinění lékařů či advokátů v rámci komor).
+
+
+3. *Pořádkové delikty*: Protiprávní jednání, které narušuje průběh procesního řízení (např. nedostavení se k výslechu bez omluvy, maření úkonu). Sankcí je pořádková pokuta, která nemá charakter trestu za delikt, ale slouží k vynucení procesní součinnosti.
+
+
+
+### 6. Záruky zákonnosti ve veřejné správě - charakteristika a význam. Charakteristika jednotlivých záruk
+
+* **Charakteristika a význam**: Záruky zákonnosti představují souhrn právních prostředků určených k zajištění dodržování a prosazování zákonnosti v organizaci a činnosti veřejné správy, a k nápravě v případě jejího porušení. Jejich význam tkví v naplňování principu právního státu a ochraně práv adresátů před zvůlí moci.
+
+
+* **Charakteristika jednotlivých záruk**:
+1. 
+**Zrušení, změna či pozastavení nezákonných aktů**: Realizuje se buď uvnitř veřejné správy (v odvolacím či přezkumném řízení podle správního řádu) , nebo vně (Ústavní soud ruší nezákonné vyhlášky).
+
+
+2. 
+**Kontrola veřejné správy**: Komplexní systém prověřování (podrobněji v otázce č. 7).
+
+
+3. 
+**Soudní přezkum (Správní soudnictví)**: Klíčová vnější nezávislá záruka. Správní soudy (Krajské soudy a Nejvyšší správní soud) přezkoumávají na základě žalob zákonnost rozhodnutí správních orgánů, poskytují ochranu před nečinností úřadu a před nezákonnými zásahy.
+
+
+4. 
+**Uplatňování práva na informace**: Politické a ústavní právo (čl. 17 LZPS, zákon č. 106/1999 Sb.), které umožňuje občanům kontrolovat činnost úřadů skrze transparentnost.
+
+
+5. 
+**Právo petiční a stížnosti**: Petice (hromadná podání podle zákona č. 85/1990 Sb.) a individuální stížnosti (např. § 175 správního řádu proti nevhodnému chování úředníků).
+
+
+6. 
+**Působení Veřejného ochránce práv (Ombudsmana)**: Nezávislá instituce (zákon č. 349/1999 Sb., sídlo v Brně), která šetří pochybení úřadů z hlediska souladu s právem i principy dobré správy. Nemá rozhodovací pravomoc, působí silou autority a mediace.
+
+
+7. **Odpovědnost za škodu způsobenou při výkonu veřejné moci**: (Zákon č. 82/1998 Sb.) Stát či ÚSC odpovídají za majetkovou i nemajetkovou újmu způsobenou nezákonným rozhodnutím nebo nesprávným úředním postupem.
+
+
+
+### 7. Kontrola veřejné správy a její systém. Jednotlivé druhy kontroly
+
+* 
+**Systém kontroly**: Kontrola veřejné správy je nejvýznamnější složkou záruk zákonnosti. Zahrnuje zjišťování skutečného stavu, jeho porovnávání se stavem žádoucím (právně regulovaným) a vyvozování závěrů. Systém je strukturován podle toho, kdo kontrolu provádí a z jaké pozice.
+
+
+* **Jednotlivé druhy kontroly**:
+1. **Vnitřní kontrola (interní)**: Probíhá uvnitř samotných struktur veřejné správy. Je založena na vztazích hierarchické podřízenosti (služební dohled vyšších orgánů nad nižšími) nebo na specializovaných vnitřních útvarech (finanční kontrola uvnitř úřadu). Hodnotí se zde jak **zákonnost**, tak **účelnost, hospodárnost a efektivita** postupu.
+2. **Vnější kontrola (externí)**: Provádějí ji subjekty stojící zcela mimo struktury kontrolované veřejné správy, což zajišťuje vyšší objektivitu:
+* 
+*Kontrola parlamentní (zákonodárná)*: Parlament kontroluje vládu a jí podřízenou správu (interpelace, vyšetřovací komise, schvalování státního závěrečného účtu).
+
+
+* 
+*Kontrola soudní*: Prováděná správními soudy a Ústavním soudem (zaměřena výhradně na zákonnost a ústavnost).
+
+
+* *Kontrola vykonávaná nezávislými specializovanými orgány*: Např. Nejvyšší kontrolní úřad (NKÚ), který prověřuje hospodaření se státním majetkem a plnění státního rozpočtu z hlediska zákonnosti a ekonomické účelnosti.
+
+
+* 
+*Kontrola občany (veřejností)*: Realizovaná jednotlivci či spolky skrze uplatňování práva na informace, podávání petic, stížností a medializaci případů.
+</script>
+
+  <script>
+    "use strict";
+
+    const els = {
+      remaining: document.getElementById("remaining"),
+      correct: document.getElementById("correct"),
+      question: document.getElementById("question"),
+      answer: document.getElementById("answer"),
+      hint: document.getElementById("hint"),
+      btnCorrect: document.getElementById("btnCorrect"),
+      btnShowAnswer: document.getElementById("btnShowAnswer"),
+      btnNext: document.getElementById("btnNext"),
+      btnRestart: document.getElementById("btnRestart"),
+      sourceEditor: document.getElementById("sourceEditor"),
+      sourceMd: document.getElementById("source-md"),
+    };
+
+    function extractQAFromMarkdown(markdown) {
+      const lines = markdown.split(/\r?\n/);
+      const items = [];
+
+      let currentQuestion = null;
+      let currentAnswerLines = [];
+
+      function pushCurrent() {
+        if (!currentQuestion) return;
+        const answer = currentAnswerLines.join("\n").trim();
+        items.push({
+          question: currentQuestion,
+          answer,
+        });
+      }
+
+      for (const rawLine of lines) {
+        const line = rawLine.trimEnd();
+        if (line.startsWith("### ")) {
+          pushCurrent();
+          currentQuestion = line.slice(4).trim();
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (line.startsWith("## ") || line.startsWith("# ")) {
+          pushCurrent();
+          currentQuestion = null;
+          currentAnswerLines = [];
+          continue;
+        }
+
+        if (currentQuestion) currentAnswerLines.push(rawLine);
+      }
+
+      pushCurrent();
+
+      const unique = [];
+      const seen = new Set();
+      for (const item of items) {
+        const key = item.question.toLowerCase();
+        if (!seen.has(key)) {
+          seen.add(key);
+          unique.push(item);
+        }
+      }
+      return unique;
+    }
+
+    function randInt(maxExclusive) {
+      return Math.floor(Math.random() * maxExclusive);
+    }
+
+    const state = {
+      allItems: [],
+      remaining: [],
+      currentIndex: -1,
+      correct: 0,
+      lastActionWasAnswer: false,
+      answerVisible: false,
+    };
+
+    function setButtonsEnabled(enabled) {
+      els.btnCorrect.disabled = !enabled;
+      els.btnShowAnswer.disabled = !enabled;
+    }
+
+    function hideAnswer() {
+      state.answerVisible = false;
+      els.answer.classList.remove("visible");
+      els.answer.textContent = "";
+      els.btnShowAnswer.textContent = "Ukázat odpověď";
+    }
+
+    function toggleAnswer() {
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) return;
+      const item = state.remaining[state.currentIndex];
+      state.answerVisible = !state.answerVisible;
+
+      if (!state.answerVisible) {
+        hideAnswer();
+        return;
+      }
+
+      const answerText = (item.answer || "").trim();
+      els.answer.textContent = answerText.length > 0 ? answerText : "Odpověď není ve zdrojovém Markdownu uvedena.";
+      els.answer.classList.add("visible");
+      els.btnShowAnswer.textContent = "Skrýt odpověď";
+    }
+
+    function updateUI() {
+      els.remaining.textContent = String(state.remaining.length);
+      els.correct.textContent = String(state.correct);
+
+      if (state.remaining.length === 0) {
+        els.question.textContent = "Hotovo. Nezbývá žádná otázka.";
+        els.hint.textContent = "Můžeš dát Restart a začít znovu.";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      if (state.currentIndex < 0 || state.currentIndex >= state.remaining.length) {
+        els.question.textContent = "Klikni na Další otázka.";
+        els.hint.textContent = "";
+        hideAnswer();
+        setButtonsEnabled(false);
+        return;
+      }
+
+      const item = state.remaining[state.currentIndex];
+      els.question.textContent = item.question;
+      els.hint.textContent = state.lastActionWasAnswer
+        ? "Označeno. Pokračuj tlačítkem Další otázka."
+        : "Označ výsledek: Správně.";
+
+      setButtonsEnabled(!state.lastActionWasAnswer);
+      if (!state.answerVisible) hideAnswer();
+    }
+
+    function pickNextQuestion() {
+      if (state.remaining.length === 0) {
+        state.currentIndex = -1;
+        updateUI();
+        return;
+      }
+
+      state.currentIndex = randInt(state.remaining.length);
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    function markCorrect() {
+      if (state.currentIndex < 0) return;
+      state.correct += 1;
+      state.remaining.splice(state.currentIndex, 1);
+      state.currentIndex = -1;
+      state.lastActionWasAnswer = true;
+      hideAnswer();
+      updateUI();
+    }
+
+    function restart() {
+      const source = els.sourceEditor.value;
+      state.allItems = extractQAFromMarkdown(source);
+      state.remaining = [...state.allItems];
+      state.currentIndex = -1;
+      state.correct = 0;
+      state.lastActionWasAnswer = false;
+      hideAnswer();
+      updateUI();
+    }
+
+    els.btnNext.addEventListener("click", pickNextQuestion);
+    els.btnCorrect.addEventListener("click", markCorrect);
+    els.btnShowAnswer.addEventListener("click", toggleAnswer);
+    els.btnRestart.addEventListener("click", restart);
+
+    els.sourceEditor.value = (els.sourceMd.textContent || "").trim();
+    restart();
+  </script>
+</body>
+</html>
